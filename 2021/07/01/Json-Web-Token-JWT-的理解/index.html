@@ -20,30 +20,35 @@
     var CONFIG = {"hostname":"ev1l0o4g.tk","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="啥也不是">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ev1l0o4g&#39;s blog">
-<meta property="og:url" content="https://ev1l0o4g.tk/index.html">
+  <meta name="description" content="什么是JWT现代 web 应用中替代 cookie 表示用户身份凭证的载体。形式类似 base64，但使用了 base64 可用字符空间之外的点字符，且无法直接解码。服务端对 JWT 实现不好，容易导致垂直越权，HTTP 报文中一旦发现 JWT，应重点关注。 JWT结构JSON Web Token由三部分组成，它们之间用圆点(.)连接，这三部分分别是：”Header.Payload.Signatu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Json Web Token(JWT)的理解">
+<meta property="og:url" content="https://ev1l0o4g.tk/2021/07/01/Json-Web-Token-JWT-%E7%9A%84%E7%90%86%E8%A7%A3/index.html">
 <meta property="og:site_name" content="ev1l0o4g&#39;s blog">
-<meta property="og:description" content="啥也不是">
+<meta property="og:description" content="什么是JWT现代 web 应用中替代 cookie 表示用户身份凭证的载体。形式类似 base64，但使用了 base64 可用字符空间之外的点字符，且无法直接解码。服务端对 JWT 实现不好，容易导致垂直越权，HTTP 报文中一旦发现 JWT，应重点关注。 JWT结构JSON Web Token由三部分组成，它们之间用圆点(.)连接，这三部分分别是：”Header.Payload.Signatu">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://files.catbox.moe/70fg9q.png">
+<meta property="article:published_time" content="2021-07-01T09:25:52.000Z">
+<meta property="article:modified_time" content="2021-07-01T09:42:57.237Z">
 <meta property="article:author" content="ev1l0o4g">
+<meta property="article:tag" content="认证">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://files.catbox.moe/70fg9q.png">
 
-<link rel="canonical" href="https://ev1l0o4g.tk/">
+<link rel="canonical" href="https://ev1l0o4g.tk/2021/07/01/Json-Web-Token-JWT-%E7%9A%84%E7%90%86%E8%A7%A3/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>ev1l0o4g's blog</title>
+  <title>Json Web Token(JWT)的理解 | ev1l0o4g's blog</title>
   
 
 
@@ -167,9 +172,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -185,10 +191,9 @@
       <meta itemprop="name" content="ev1l0o4g's blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/01/Json-Web-Token-JWT-%E7%9A%84%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">Json Web Token(JWT)的理解</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Json Web Token(JWT)的理解
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -210,7 +215,14 @@
                 </span>
             </span>
 
-          <br>
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -235,7 +247,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="什么是JWT"><a href="#什么是JWT" class="headerlink" title="什么是JWT"></a>什么是JWT</h1><p>现代 web 应用中替代 cookie 表示用户身份凭证的载体。形式类似 base64，但使用了 base64 可用字符空间之外的点字符，且无法直接解码。服务端对 JWT 实现不好，容易导致垂直越权，HTTP 报文中一旦发现 JWT，应重点关注。</p>
+        <h1 id="什么是JWT"><a href="#什么是JWT" class="headerlink" title="什么是JWT"></a>什么是JWT</h1><p>现代 web 应用中替代 cookie 表示用户身份凭证的载体。形式类似 base64，但使用了 base64 可用字符空间之外的点字符，且无法直接解码。服务端对 JWT 实现不好，容易导致垂直越权，HTTP 报文中一旦发现 JWT，应重点关注。</p>
 <h1 id="JWT结构"><a href="#JWT结构" class="headerlink" title="JWT结构"></a>JWT结构</h1><p>JSON Web Token由三部分组成，它们之间用圆点(.)连接，这三部分分别是：”Header.Payload.Signature”。<br>Header典型的由两部分组成：token的类型（“JWT”）和算法名称（比如：HMAC SHA256或者RSA等等）。例如：</p>
 <figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs 1c">&#123;<br>&#x27;alg&#x27;: <span class="hljs-string">&quot;HS256&quot;</span>,<br>&#x27;typ&#x27;: <span class="hljs-string">&quot;JWT&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <p>然后，用Base64对这个JSON编码就得到JWT的第一部分。<br>JWT的第二部分是Payload，它包含声明（要求）。声明是关于实体(通常是用户)和其他数据的声明。声明有三种类型: registered, public 和 private。例如：</p>
@@ -258,21 +270,26 @@
 <h1 id="JWT-Debugger"><a href="#JWT-Debugger" class="headerlink" title="JWT Debugger"></a>JWT Debugger</h1><p><a target="_blank" rel="noopener" href="https://jwt.io/#debugger">https://jwt.io/#debugger</a><br><img src="https://files.catbox.moe/70fg9q.png"></p>
 <h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a target="_blank" rel="noopener" href="https://wiki.freebuf.com/detail?wiki=15&post=274704">https://wiki.freebuf.com/detail?wiki=15&amp;post=274704</a><br>​</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A4%E8%AF%81/" rel="tag"># 认证</a>
+          </div>
+
+        
+
+
+        
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -325,6 +342,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFJWT"><span class="nav-number">1.</span> <span class="nav-text">什么是JWT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JWT%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">JWT结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%89%8B%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">攻击手法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JWT-Debugger"><span class="nav-number">4.</span> <span class="nav-text">JWT Debugger</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="nav-number">5.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
