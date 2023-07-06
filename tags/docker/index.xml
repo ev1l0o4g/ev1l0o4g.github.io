@@ -1,0 +1,20 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>docker - 标签 - ev1l0o4g&#39;s blog</title>
+        <link>https://ev1l0o4g.xyz/tags/docker/</link>
+        <description>docker - 标签 - ev1l0o4g&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Thu, 06 Jul 2023 14:20:05 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/docker/" rel="self" type="application/rss+xml" /><item>
+    <title>Docker逃逸判断三两事</title>
+    <link>https://ev1l0o4g.xyz/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/</link>
+    <pubDate>Thu, 06 Jul 2023 14:20:05 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/</guid>
+    <description><![CDATA[最近测试再次遇到一个docker环境的情况，有些东西还是要现查现找，这次顺便再学习学习，一切皆来源于TWiki。
+检测判断 判断是否为容器环境 1 cat /proc/1/cgroup | grep -qi docker &amp;&amp; echo &#34;Is Docker&#34; || echo &#34;Not Docker&#34; 判断逃逸方法 在开始之前对于容器逃逸主要有以下三种方法：
+不安全的配置 相关程序漏洞 内核漏洞 由于「相关程序漏洞」这种逃逸方法需要根据目标 Docker 的版本去判断，这里暂时没想到从容器内部获取 Docker 版本的方法，因此暂时还不支持这块的检测。
+不安全的配置 特权模式 1 cat /proc/self/status | grep -qi &#34;0000003fffffffff&#34; &amp;&amp; echo &#34;Is privileged mode&#34; || echo &#34;Not privileged mode&#34; 如果返回 Is privileged mode 则说明当前是特权模式；如果返回 Not privileged mode 则说明当前不是特权模式。 2. 挂载Docker Socket
+1 ls /var/run/ | grep -qi docker.sock &amp;&amp; echo &#34;Docker Socket is mounted.]]></description>
+</item>
+</channel>
+</rss>

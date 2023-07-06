@@ -1,0 +1,62 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>ev1l0o4g&#39;s blog</title>
+        <link>https://ev1l0o4g.xyz/</link>
+        <description>记录生活与学习</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Thu, 06 Jul 2023 14:20:05 &#43;0800</lastBuildDate>
+            <atom:link href="https://ev1l0o4g.xyz/index.xml" rel="self" type="application/rss+xml" />
+        <item>
+    <title>Docker逃逸判断三两事</title>
+    <link>https://ev1l0o4g.xyz/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/</link>
+    <pubDate>Thu, 06 Jul 2023 14:20:05 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/</guid>
+    <description><![CDATA[最近测试再次遇到一个docker环境的情况，有些东西还是要现查现找，这次顺便再学习学习，一切皆来源于TWiki。
+检测判断 判断是否为容器环境 1 cat /proc/1/cgroup | grep -qi docker &amp;&amp; echo &#34;Is Docker&#34; || echo &#34;Not Docker&#34; 判断逃逸方法 在开始之前对于容器逃逸主要有以下三种方法：
+不安全的配置 相关程序漏洞 内核漏洞 由于「相关程序漏洞」这种逃逸方法需要根据目标 Docker 的版本去判断，这里暂时没想到从容器内部获取 Docker 版本的方法，因此暂时还不支持这块的检测。
+不安全的配置 特权模式 1 cat /proc/self/status | grep -qi &#34;0000003fffffffff&#34; &amp;&amp; echo &#34;Is privileged mode&#34; || echo &#34;Not privileged mode&#34; 如果返回 Is privileged mode 则说明当前是特权模式；如果返回 Not privileged mode 则说明当前不是特权模式。 2. 挂载Docker Socket
+1 ls /var/run/ | grep -qi docker.sock &amp;&amp; echo &#34;Docker Socket is mounted.]]></description>
+</item>
+<item>
+    <title>Linux提权之suid提权</title>
+    <link>https://ev1l0o4g.xyz/linux%E6%8F%90%E6%9D%83%E4%B9%8Bsuid%E6%8F%90%E6%9D%83/</link>
+    <pubDate>Tue, 27 Jun 2023 16:47:35 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/linux%E6%8F%90%E6%9D%83%E4%B9%8Bsuid%E6%8F%90%E6%9D%83/</guid>
+    <description><![CDATA[环境：靶场insecurity
+什么是suid SUID是赋予文件的一种特殊权限，具有这种特殊权限的文件会在其执行时，使调用者暂时获得该文件属主的权限。如果某些现有的二进制文件和实用程序具有SUID权限的话，就可以在执行时将权限提升为root。 SUID提权的原理与Linux进程的UID有关，进程在运行的时候有以下三个UID：
+1 2 3 （A）Real UID：执行该进程的用户的UID。Real UID只用于标识用户，不用于权限检查。 （B）Effective UID（EUID）：进程执行时生效的UID。在对访问目标进行操作时，系统会检查EUID是否有权限。一般情况下，Real UID与EUID相同，但在运行设置了SUID权限的程序时，进程的EUID会被设置为程序文件属主的UID。 （C）Saved UID：在高权限用户降权后，保留的UID。 如果某个设置了SUID权限的程序运行后创建了shell，那么shell进程的EUID也会是这个程序文件属主的UID，如果属主为root，便是一个root shell。root shell中运行的程序的EUID也都是0，具备超级权限，于是便实现了提权。 使用chmod u+s [文件]命令为文件配置SUID权限。
+提权操作 suid提权其实就是查找具有特定suid权限的参数，再利用其参数进行提权命令调用。suid提权仅对可执行二进制文件有效。 查看本机用有suid权限的文件：
+1 2 3 4 find / -user root -perm -4000 -print 2&gt;/dev/null find / -perm -u=s -type f 2&gt;/dev/null find / -user root -perm -4000 -exec ls -ldb {} \; find / -perm -4000 -type f -exec ls -la {} 2&gt;/dev/null \; taskset
+执行命令 taskset 1 /bin/bash -p，成功获取到root权限，提权成功 xxd]]></description>
+</item>
+<item>
+    <title>目标资产收集小结</title>
+    <link>https://ev1l0o4g.xyz/%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E6%94%B6%E9%9B%86%E5%B0%8F%E7%BB%93/</link>
+    <pubDate>Tue, 27 Jun 2023 15:16:20 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E6%94%B6%E9%9B%86%E5%B0%8F%E7%BB%93/</guid>
+    <description><![CDATA[icp备案 通常演练时会告知目标单位的名字，但可能不是全称，而是简称或者缺少某些关键字，这时需要百度目标单位的全称。 获取全称后在工信部备案网站查询目标单位备案的域名，这样查询到的资产最准确，也保证了后面子域名的准确性，不至于最后收获的是“非目标单位资产”。 也可以在企查查/天眼查/小蓝书网站查询，关注官网、邮箱、备案号、公众号、小程序等。
+子域名 域名明确了下一步进行子域名收集。
+subfinder+ksubdomain+httpx ./subfinder -d baidu.com -silent|./ksubdomain -verify -silent|./httpx -title -content-length -status-code
+1 2 3 4 5 6 subfinder：用来查询域名的子域名信息的工具，可以使用很多国外安全网站的api接口进行自动化搜索子域名信息。 Httpx：一款运行速度极快的多功能HTTP安全工具，它可以使用retryablehttp库来运行多种网络探针，并使用了多线程机制来维持运行的稳定性和结果的准确性。 ksubdomain是一款基于无状态子域名爆破工具，支持在Windows/Linux/Mac上使用，它会很快的进行DNS爆破，在Mac和Windows上理论最大发包速度在30w/s,linux上为160w/s的速度。 https://github.com/projectdiscovery/subfinder https://github.com/projectdiscovery/httpx https://github.com/knownsec/ksubdomain fofa 通过fofa模糊搜索查询子域名或系统名称。 如果目标资产有CDN，使用的是https，可以通过fofa扩展功能定位真实IP：
+1 2 3 * 首先查看https获得网站证书序列号； * 将序列号十六进制转换成十进制（https://tool.lu/hexconvert/） * 利用fofa语法cert：cert=&#34;十进制序列号&#34;搜索证书（https或imaps等）中带有对应证书的资产。 hunter
+hunter有两个语法很给力，一个是icp.name可直接搜索目标的备案资产，还有domain.suffix查询主域为对应域名的网站。
+零零信安 (company=目标单位名) 有些资产可能是第三方开发公司或平台的资产。
+OneForAll
+google语法 site:baidu.com -www
+端口 目前好用的有naabu和nmap，但是速度都有点慢。
+naabu -host [IP] -p - -nmap-cli &quot;nmap -sV&quot;
+nmap -sS -Pn -n --open 122.14.193.200 --min-hostgroup 4 --min-parallelism 1024 --host-timeout 30 -T4 -v -p 1-65535 嫌慢的话直接用空间搜索引擎查看也可以。]]></description>
+</item>
+<item>
+    <title>浏览器控制台base64编码解码</title>
+    <link>https://ev1l0o4g.xyz/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%BC%96%E7%A0%81%E8%A7%A3%E7%A0%81/</link>
+    <pubDate>Tue, 27 Jun 2023 14:46:52 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%BC%96%E7%A0%81%E8%A7%A3%E7%A0%81/</guid>
+    <description><![CDATA[f12打开控制台，编码：btoa(&quot;要编码内容&quot;)，解码：atob(&quot;要解码内容&quot;) ]]></description>
+</item>
+</channel>
+</rss>

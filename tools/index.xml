@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tools on ev1l0o4g&#39;s blog</title>
+    <link>https://ev1l0o4g.xyz/tools/</link>
+    <description>Recent content in Tools on ev1l0o4g&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
+    <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><atom:link href="https://ev1l0o4g.xyz/tools/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://ev1l0o4g.xyz/tools/tools/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>ev1l0o4g@gmail.com (ev1l0o4g)</author>
+      <guid>https://ev1l0o4g.xyz/tools/tools/</guid>
+      <description>Some Tools 自建 社会工程学密码生成器 URL&amp;amp;IP在线处理工具 av查询 提权补丁查询 google-hacking-tools Linux命令查询 reverse-shell 漏扫工具 nuclei afrog fscan xray 信息收集(含指纹识别、目录扫描等) kscan OneForAll Ehole3.0 KSubdomian subfinder httpx ksubdomain naabu uncover ffuf 漏洞wiki PeiqiWiki Vulnerability-Wiki Awesome-POC nuclei-templates Nuclei Templates Directory trickest-cve DNSlog ceye dig.pm interactsh Hyug 漏洞情报预警 阿里云漏洞库 OSCS开源安全情报预警 奇安信威胁情报中心 微步在线漏洞情报 Seebug漏洞平台 </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,27 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>信息收集 - 标签 - ev1l0o4g&#39;s blog</title>
+        <link>https://ev1l0o4g.xyz/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/</link>
+        <description>信息收集 - 标签 - ev1l0o4g&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Tue, 27 Jun 2023 15:16:20 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="self" type="application/rss+xml" /><item>
+    <title>目标资产收集小结</title>
+    <link>https://ev1l0o4g.xyz/%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E6%94%B6%E9%9B%86%E5%B0%8F%E7%BB%93/</link>
+    <pubDate>Tue, 27 Jun 2023 15:16:20 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E6%94%B6%E9%9B%86%E5%B0%8F%E7%BB%93/</guid>
+    <description><![CDATA[icp备案 通常演练时会告知目标单位的名字，但可能不是全称，而是简称或者缺少某些关键字，这时需要百度目标单位的全称。 获取全称后在工信部备案网站查询目标单位备案的域名，这样查询到的资产最准确，也保证了后面子域名的准确性，不至于最后收获的是“非目标单位资产”。 也可以在企查查/天眼查/小蓝书网站查询，关注官网、邮箱、备案号、公众号、小程序等。
+子域名 域名明确了下一步进行子域名收集。
+subfinder+ksubdomain+httpx ./subfinder -d baidu.com -silent|./ksubdomain -verify -silent|./httpx -title -content-length -status-code
+1 2 3 4 5 6 subfinder：用来查询域名的子域名信息的工具，可以使用很多国外安全网站的api接口进行自动化搜索子域名信息。 Httpx：一款运行速度极快的多功能HTTP安全工具，它可以使用retryablehttp库来运行多种网络探针，并使用了多线程机制来维持运行的稳定性和结果的准确性。 ksubdomain是一款基于无状态子域名爆破工具，支持在Windows/Linux/Mac上使用，它会很快的进行DNS爆破，在Mac和Windows上理论最大发包速度在30w/s,linux上为160w/s的速度。 https://github.com/projectdiscovery/subfinder https://github.com/projectdiscovery/httpx https://github.com/knownsec/ksubdomain fofa 通过fofa模糊搜索查询子域名或系统名称。 如果目标资产有CDN，使用的是https，可以通过fofa扩展功能定位真实IP：
+1 2 3 * 首先查看https获得网站证书序列号； * 将序列号十六进制转换成十进制（https://tool.lu/hexconvert/） * 利用fofa语法cert：cert=&#34;十进制序列号&#34;搜索证书（https或imaps等）中带有对应证书的资产。 hunter
+hunter有两个语法很给力，一个是icp.name可直接搜索目标的备案资产，还有domain.suffix查询主域为对应域名的网站。
+零零信安 (company=目标单位名) 有些资产可能是第三方开发公司或平台的资产。
+OneForAll
+google语法 site:baidu.com -www
+端口 目前好用的有naabu和nmap，但是速度都有点慢。
+naabu -host [IP] -p - -nmap-cli &quot;nmap -sV&quot;
+nmap -sS -Pn -n --open 122.14.193.200 --min-hostgroup 4 --min-parallelism 1024 --host-timeout 30 -T4 -v -p 1-65535 嫌慢的话直接用空间搜索引擎查看也可以。]]></description>
+</item>
+</channel>
+</rss>

