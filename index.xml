@@ -4,9 +4,29 @@
         <link>https://ev1l0o4g.xyz/</link>
         <description>记录生活与学习</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
-            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Thu, 06 Jul 2023 14:20:05 &#43;0800</lastBuildDate>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</lastBuildDate>
             <atom:link href="https://ev1l0o4g.xyz/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>记录网盘及一些工具的搭建</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
+    <pubDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</guid>
+    <description><![CDATA[网盘 最近想着天翼云盘和阿里云盘各有2T空间闲着，过于浪费，现在自建网盘如此火热，何不物尽其用。看很多师傅用Alist搭建，应该也挺好用，就用了Alist。
+下载Alist Release相应版本文件到VPS并解压
+1 2 3 4 5 6 7 8 # 解压下载的文件，得到可执行文件： tar -zxvf alist-xxxx.tar.gz # 授予程序执行权限： chmod +x alist # 运行程序 ./alist server # 获得管理员信息 ./alist admin 使用任意方式编辑 /usr/lib/systemd/system/alist.service 并添加如下内容，其中 path_alist 为 AList 所在的路径：
+1 2 3 4 5 6 7 8 9 10 11 12 [Unit] Description=alist After=network.target [Service] Type=simple WorkingDirectory=path_alist ExecStart=path_alist/alist server Restart=on-failure [Install] WantedBy=multi-user.target 然后，执行 systemctl daemon-reload 重载配置，然后可以使用这些命令来管理程序：
+启动: systemctl start alist 关闭: systemctl stop alist 配置开机自启: systemctl enable alist 取消开机自启: systemctl disable alist 状态: systemctl status alist 重启: systemctl restart alist 若要更新，下载新版Alist，把之前的替换了即可。]]></description>
+</item>
+<item>
+    <title>一些查看Windows信息的操作</title>
+    <link>https://ev1l0o4g.xyz/%E4%B8%80%E4%BA%9B%E6%9F%A5%E7%9C%8Bwindows%E4%BF%A1%E6%81%AF%E7%9A%84%E6%93%8D%E4%BD%9C/</link>
+    <pubDate>Mon, 17 Jul 2023 14:17:47 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E4%B8%80%E4%BA%9B%E6%9F%A5%E7%9C%8Bwindows%E4%BF%A1%E6%81%AF%E7%9A%84%E6%93%8D%E4%BD%9C/</guid>
+    <description><![CDATA[查看账号信息 查看当前登录账户：queryuser 注销用户ID：logoff [ID] 查看用户：net user 查看用户登录情况：net user [username] 打开本地用户组：lusrmgr.msc 注册表查看账户，确认系统是否存在隐藏账户：regedit——&gt;HKEY_LOCAL_MACHINE\SAM\SAM\Domains\Account\Users\Names 查看端口进程 查看当前连接：netstat -ano 查看当前成功建立的连接：netstat -ano | findstr &ldquo;ESTABLISHED&rdquo; 根据pid定位程序：tasklist | findstr &ldquo;[pid]&rdquo; 根据端口查看pid：netstat -ano | findstr &ldquo;8080&rdquo; 在“正在运行任务”中获取进程详细信息（进程开始时间、版本、大小等）：运行——msinfo32——软件环境——正在运行任务 利用wmic查看进程执行时的命令： Wmic process where name='[进程名称]' get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value Wmic process where processid='[进程ID]' get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value 查看启动项 查看系统启动项：运行——msconfig 注册表查看是否有异常启动项： HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Runonce HKEY_CURRENT_USER\software\micorsoft\windows\currentversion\run 查看计划任务 查看定时任务：终端运行schtasks，win7使用at 查看任务清单：C:\Windows\System32\Tasks 删除计划任务（管理员）：SchTasks /Delete /TN [任务计划名称] 查看系统服务 查看服务：services.msc 删除服务：可手动删除，也可命令行删除。停止服务：sc stop [服务名称]；删除服务：sc delete [服务名称] 查看文件 查看最近打开的文件：&quot;%UserProfile%\Recent&quot; 查看C:\Documents and Settings和C:\Users下是否存在可疑用户或文件 查看日志 1 2 3 4 5 6 7 8 9 10 11 12 Windows安全日志文件在以下路径： Windows 7及之前的Windows版本：C:\Windows\System32\config\security.]]></description>
+</item>
+<item>
     <title>Docker逃逸判断三两事</title>
     <link>https://ev1l0o4g.xyz/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/</link>
     <pubDate>Thu, 06 Jul 2023 14:20:05 &#43;0800</pubDate>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>一些查看Windows信息的操作 - ev1l0o4g&#39;s blog</title><meta name="Description" content="记录生活与学习"><meta property="og:title" content="一些查看Windows信息的操作" />
+<meta property="og:description" content="查看账号信息 查看当前登录账户：queryuser 注销用户ID：logoff [ID] 查看用户：net user 查看用户登录情况：net user [username] 打开本地用户组：lusrmgr.msc 注册表查看账户，确认系统是否存在隐藏账户：regedit——&gt;HKEY_LOCAL_MACHINE\SAM\SAM\Domains\Account\Users\Names 查看端口进程 查看当前连接：netstat -ano 查看当前成功建立的连接：netstat -ano | findstr &ldquo;ESTABLISHED&rdquo; 根据pid定位程序：tasklist | findstr &ldquo;[pid]&rdquo; 根据端口查看pid：netstat -ano | findstr &ldquo;8080&rdquo; 在“正在运行任务”中获取进程详细信息（进程开始时间、版本、大小等）：运行——msinfo32——软件环境——正在运行任务 利用wmic查看进程执行时的命令： Wmic process where name=&#39;[进程名称]&#39; get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value Wmic process where processid=&#39;[进程ID]&#39; get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value 查看启动项 查看系统启动项：运行——msconfig 注册表查看是否有异常启动项： HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Runonce HKEY_CURRENT_USER\software\micorsoft\windows\currentversion\run 查看计划任务 查看定时任务：终端运行schtasks，win7使用at 查看任务清单：C:\Windows\System32\Tasks 删除计划任务（管理员）：SchTasks /Delete /TN [任务计划名称] 查看系统服务 查看服务：services.msc 删除服务：可手动删除，也可命令行删除。停止服务：sc stop [服务名称]；删除服务：sc delete [服务名称] 查看文件 查看最近打开的文件：&quot;%UserProfile%\Recent&quot; 查看C:\Documents and Settings和C:\Users下是否存在可疑用户或文件 查看日志 1 2 3 4 5 6 7 8 9 10 11 12 Windows安全日志文件在以下路径： Windows 7及之前的Windows版本：C:\Windows\System32\config\security." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ev1l0o4g.xyz/%E4%B8%80%E4%BA%9B%E6%9F%A5%E7%9C%8Bwindows%E4%BF%A1%E6%81%AF%E7%9A%84%E6%93%8D%E4%BD%9C/" /><meta property="og:image" content="https://ev1l0o4g.xyz/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-07-17T14:17:47+08:00" />
+<meta property="article:modified_time" content="2023-07-17T14:17:47+08:00" /><meta property="og:site_name" content="ev1l0o4g&#39;s blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://ev1l0o4g.xyz/images/avatar.png"/>
+
+<meta name="twitter:title" content="一些查看Windows信息的操作"/>
+<meta name="twitter:description" content="查看账号信息 查看当前登录账户：queryuser 注销用户ID：logoff [ID] 查看用户：net user 查看用户登录情况：net user [username] 打开本地用户组：lusrmgr.msc 注册表查看账户，确认系统是否存在隐藏账户：regedit——&gt;HKEY_LOCAL_MACHINE\SAM\SAM\Domains\Account\Users\Names 查看端口进程 查看当前连接：netstat -ano 查看当前成功建立的连接：netstat -ano | findstr &ldquo;ESTABLISHED&rdquo; 根据pid定位程序：tasklist | findstr &ldquo;[pid]&rdquo; 根据端口查看pid：netstat -ano | findstr &ldquo;8080&rdquo; 在“正在运行任务”中获取进程详细信息（进程开始时间、版本、大小等）：运行——msinfo32——软件环境——正在运行任务 利用wmic查看进程执行时的命令： Wmic process where name=&#39;[进程名称]&#39; get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value Wmic process where processid=&#39;[进程ID]&#39; get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value 查看启动项 查看系统启动项：运行——msconfig 注册表查看是否有异常启动项： HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Runonce HKEY_CURRENT_USER\software\micorsoft\windows\currentversion\run 查看计划任务 查看定时任务：终端运行schtasks，win7使用at 查看任务清单：C:\Windows\System32\Tasks 删除计划任务（管理员）：SchTasks /Delete /TN [任务计划名称] 查看系统服务 查看服务：services.msc 删除服务：可手动删除，也可命令行删除。停止服务：sc stop [服务名称]；删除服务：sc delete [服务名称] 查看文件 查看最近打开的文件：&quot;%UserProfile%\Recent&quot; 查看C:\Documents and Settings和C:\Users下是否存在可疑用户或文件 查看日志 1 2 3 4 5 6 7 8 9 10 11 12 Windows安全日志文件在以下路径： Windows 7及之前的Windows版本：C:\Windows\System32\config\security."/>
+<meta name="application-name" content="ev1l0o4g&#39;s blog">
+<meta name="apple-mobile-web-app-title" content="ev1l0o4g&#39;s blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://ev1l0o4g.xyz/%E4%B8%80%E4%BA%9B%E6%9F%A5%E7%9C%8Bwindows%E4%BF%A1%E6%81%AF%E7%9A%84%E6%93%8D%E4%BD%9C/" /><link rel="prev" href="https://ev1l0o4g.xyz/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/" /><link rel="next" href="https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "一些查看Windows信息的操作",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/ev1l0o4g.xyz\/%E4%B8%80%E4%BA%9B%E6%9F%A5%E7%9C%8Bwindows%E4%BF%A1%E6%81%AF%E7%9A%84%E6%93%8D%E4%BD%9C\/"
+        },"image": ["https:\/\/ev1l0o4g.xyz\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "应急响应, 蓝队","wordcount":  252 ,
+        "url": "https:\/\/ev1l0o4g.xyz\/%E4%B8%80%E4%BA%9B%E6%9F%A5%E7%9C%8Bwindows%E4%BF%A1%E6%81%AF%E7%9A%84%E6%93%8D%E4%BD%9C\/","datePublished": "2023-07-17T14:17:47+08:00","dateModified": "2023-07-17T14:17:47+08:00","publisher": {
+            "@type": "Organization",
+            "name": "ev1l0o4g","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/ev1l0o4g.xyz\/images\/avatar.png",
+                    "width":  850 ,
+                    "height":  629 
+                }},"author": {
+                "@type": "Person",
+                "name": "ev1l0o4g"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="ev1l0o4g&#39;s blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span><span id="id-1" class="typeit"></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="https://mynav.ev1l0o4g.xyz/" rel="noopener noreffer" target="_blank"> 导航页 </a><a class="menu-item" href="https://ai.ev1l0o4g.xyz" rel="noopener noreffer" target="_blank"> AI </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tools/tools"> 武器库 </a><a class="menu-item" href="/friends/friends"> 友链 </a><a class="menu-item" href="/about/about"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="ev1l0o4g&#39;s blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span><span id="id-2" class="typeit"></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="https://mynav.ev1l0o4g.xyz/" title="" rel="noopener noreffer" target="_blank">导航页</a><a class="menu-item" href="https://ai.ev1l0o4g.xyz" title="" rel="noopener noreffer" target="_blank">AI</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tools/tools" title="">武器库</a><a class="menu-item" href="/friends/friends" title="">友链</a><a class="menu-item" href="/about/about" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">一些查看Windows信息的操作</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>ev1l0o4g</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>应急响应</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-07-17">2023-07-17</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 252 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#查看账号信息">查看账号信息</a></li>
+        <li><a href="#查看端口进程">查看端口进程</a></li>
+        <li><a href="#查看启动项">查看启动项</a></li>
+        <li><a href="#查看计划任务">查看计划任务</a></li>
+        <li><a href="#查看系统服务">查看系统服务</a></li>
+        <li><a href="#查看文件">查看文件</a></li>
+        <li><a href="#查看日志">查看日志</a></li>
+        <li><a href="#webshell查杀工具">webshell查杀工具</a></li>
+        <li><a href="#参考文章">参考文章</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="查看账号信息">查看账号信息</h2>
+<ul>
+<li>查看当前登录账户：queryuser</li>
+<li>注销用户ID：logoff [ID]</li>
+<li>查看用户：net user</li>
+<li>查看用户登录情况：net user [username]</li>
+<li>打开本地用户组：lusrmgr.msc</li>
+<li>注册表查看账户，确认系统是否存在隐藏账户：regedit——&gt;<code>HKEY_LOCAL_MACHINE\SAM\SAM\Domains\Account\Users\Names</code></li>
+</ul>
+<h2 id="查看端口进程">查看端口进程</h2>
+<ul>
+<li>查看当前连接：netstat -ano</li>
+<li>查看当前成功建立的连接：netstat -ano | findstr &ldquo;ESTABLISHED&rdquo;</li>
+<li>根据pid定位程序：tasklist | findstr &ldquo;[pid]&rdquo;</li>
+<li>根据端口查看pid：netstat -ano | findstr &ldquo;8080&rdquo;</li>
+<li>在“正在运行任务”中获取进程详细信息（进程开始时间、版本、大小等）：运行——msinfo32——软件环境——正在运行任务</li>
+<li>利用wmic查看进程执行时的命令：
+<code>Wmic process where name='[进程名称]' get name,Caption,executablepath,CommandLine ,processid,ParentProcessId  /value</code>
+<code>Wmic process where processid='[进程ID]' get name,Caption,executablepath,CommandLine ,processid,ParentProcessId  /value</code></li>
+</ul>
+<h2 id="查看启动项">查看启动项</h2>
+<ul>
+<li>查看系统启动项：运行——msconfig</li>
+<li>注册表查看是否有异常启动项：
+<code>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run</code>
+<code>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Runonce</code>
+<code>HKEY_CURRENT_USER\software\micorsoft\windows\currentversion\run</code></li>
+</ul>
+<h2 id="查看计划任务">查看计划任务</h2>
+<ul>
+<li>查看定时任务：终端运行schtasks，win7使用at
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://files.catbox.moe/qpesv3.png"
+        data-srcset="https://files.catbox.moe/qpesv3.png, https://files.catbox.moe/qpesv3.png 1.5x, https://files.catbox.moe/qpesv3.png 2x"
+        data-sizes="auto"
+        alt="https://files.catbox.moe/qpesv3.png"
+        title="qpesv3.png" /></li>
+<li>查看任务清单：C:\Windows\System32\Tasks
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://files.catbox.moe/9eg1df.png"
+        data-srcset="https://files.catbox.moe/9eg1df.png, https://files.catbox.moe/9eg1df.png 1.5x, https://files.catbox.moe/9eg1df.png 2x"
+        data-sizes="auto"
+        alt="https://files.catbox.moe/9eg1df.png"
+        title="9eg1df.png" /></li>
+<li>删除计划任务（管理员）：SchTasks /Delete /TN  [任务计划名称]</li>
+</ul>
+<h2 id="查看系统服务">查看系统服务</h2>
+<ul>
+<li>查看服务：services.msc</li>
+<li>删除服务：可手动删除，也可命令行删除。停止服务：sc stop [服务名称]；删除服务：sc delete [服务名称]</li>
+</ul>
+<h2 id="查看文件">查看文件</h2>
+<ul>
+<li>查看最近打开的文件：&quot;%UserProfile%\Recent&quot;</li>
+<li>查看C:\Documents and Settings和C:\Users下是否存在可疑用户或文件</li>
+</ul>
+<h2 id="查看日志">查看日志</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Windows安全日志文件在以下路径：
+</span></span><span class="line"><span class="cl">Windows 7及之前的Windows版本：C:\Windows\System32\config\security.log
+</span></span><span class="line"><span class="cl">Windows 8/8.1：C:\Windows\System32\winevt\logs\Security.evtx
+</span></span><span class="line"><span class="cl">Windows 10：C:\Windows\System32\winevt\logs\Security.evtx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Windows Server的安全日志文件与Windows 10类似，位于以下路径：
+</span></span><span class="line"><span class="cl">Windows Server 2008及之前的Windows版本：C:\Windows\System32\config\security.log
+</span></span><span class="line"><span class="cl">Windows Server 2008 R2及更高版本：C:\Windows\System32\winevt\logs\Security.evtx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">系统日志：%SystemRoot%\System32\Winevt\Logs\System.evtx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">应用程序日志：%SystemRoot%\System32\Winevt\Logs\Application.evtx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Windows安全日志事件ID：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">事件ID</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">4624</td>
+<td style="text-align:left">表示登录成功事件，包括使用正常凭据和匿名登录</td>
+</tr>
+<tr>
+<td style="text-align:center">4625</td>
+<td style="text-align:left">表示登录失败事件，包括尝试使用无效凭据或密码</td>
+</tr>
+<tr>
+<td style="text-align:center">4634</td>
+<td style="text-align:left">表示注销成功事件，包括用户正常注销和系统强制注销</td>
+</tr>
+<tr>
+<td style="text-align:center">4647</td>
+<td style="text-align:left">表示用户启动的注销事件，例如用户通过任务管理器注销或关闭计算机</td>
+</tr>
+<tr>
+<td style="text-align:center">4648</td>
+<td style="text-align:left">试图使用显式凭据登录</td>
+</tr>
+<tr>
+<td style="text-align:center">4657</td>
+<td style="text-align:left">注册表值已修改</td>
+</tr>
+<tr>
+<td style="text-align:center">4672</td>
+<td style="text-align:left">使用超级用户（如管理员）进行登录</td>
+</tr>
+<tr>
+<td style="text-align:center">4673</td>
+<td style="text-align:left">特权服务被召唤</td>
+</tr>
+<tr>
+<td style="text-align:center">4674</td>
+<td style="text-align:left">尝试对特权对象执行操作</td>
+</tr>
+<tr>
+<td style="text-align:center">4697</td>
+<td style="text-align:left">系统中安装了一项服务</td>
+</tr>
+<tr>
+<td style="text-align:center">4698</td>
+<td style="text-align:left">已创建计划任务</td>
+</tr>
+<tr>
+<td style="text-align:center">4699</td>
+<td style="text-align:left">计划任务已删除</td>
+</tr>
+<tr>
+<td style="text-align:center">4700</td>
+<td style="text-align:left">已启用计划任务</td>
+</tr>
+<tr>
+<td style="text-align:center">4701</td>
+<td style="text-align:left">计划任务已禁用</td>
+</tr>
+<tr>
+<td style="text-align:center">4702</td>
+<td style="text-align:left">计划任务已更新</td>
+</tr>
+<tr>
+<td style="text-align:center">4720</td>
+<td style="text-align:left">创建用户，包括新用户创建和现有用户重新启用</td>
+</tr>
+<tr>
+<td style="text-align:center">4740</td>
+<td style="text-align:left">用户账户已被锁定</td>
+</tr>
+<tr>
+<td style="text-align:center">4741</td>
+<td style="text-align:left">已创建计算机账户</td>
+</tr>
+<tr>
+<td style="text-align:center">4774</td>
+<td style="text-align:left">表示帐户已登录映射事件，例如通过组策略或其他方式将某个帐户映射到登录凭据中</td>
+</tr>
+<tr>
+<td style="text-align:center">4775</td>
+<td style="text-align:left">表示无法映射的登录帐户事件，例如未找到与用户名和密码匹配的帐户</td>
+</tr>
+<tr>
+<td style="text-align:center">4776</td>
+<td style="text-align:left">表示计算机试图验证的帐户凭据事件，例如尝试使用无效的凭据进行登录</td>
+</tr>
+<tr>
+<td style="text-align:center">4777</td>
+<td style="text-align:left">表示域控制器无法验证帐户的凭据事件，例如无法与域控制器进行通信或凭据无效</td>
+</tr>
+<tr>
+<td style="text-align:center">4778</td>
+<td style="text-align:left">表示到窗口站重新连接会话事件，例如重新连接到远程桌面会话</td>
+</tr>
+<tr>
+<td style="text-align:center">4779</td>
+<td style="text-align:left">表示从窗口站，会话已断开连接事件，例如远程桌面会话意外断开连接</td>
+</tr>
+<tr>
+<td style="text-align:center">6005</td>
+<td style="text-align:left">表示计算机日志服务已启动，如果在事件查看器中发现某日的事件ID号为6005，就说明这天正常启动了windows系统。</td>
+</tr>
+<tr>
+<td style="text-align:center">6006</td>
+<td style="text-align:left">表示事件日志服务已停止，如果没有在事件查看器中发现某日的事件ID为6006的事件，就表示计算机在这天没关机或没有正常关机。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>通过事件查看器查看日志：eventvwr.msc</li>
+<li>日志分析工具<a href="https://www.microsoft.com/en-us/download/details.aspx?id=24659" target="_blank" rel="noopener noreffer ">logparser</a></li>
+</ul>
+<p><strong>logparser使用：</strong></p>
+<ul>
+<li>登录成功的所有事件：<code>LogParser.exe -i:EVT -o:DATAGRID &quot;SELECT * FROM C:\Windows\System32\winevt\logs\Security.evtx where EventID=4624&quot;</code></li>
+<li>登录失败的所有事件：<code>LogParser.exe -i:EVT -o:DATAGRID &quot;SELECT * FROM C:\Windows\System32\winevt\logs\Security.evtx where EventID=4625&quot;</code></li>
+<li>指定登录时间范围的事件：<code>LogParser.exe -i:EVT -o:DATAGRID  &quot;SELECT *  FROM C:\Windows\System32\winevt\logs\Security.evtx where TimeGenerated&gt;'2023-01-19 23:32:11' and TimeGenerated&lt;'2023-06-20 23:34:00' and EventID=4624&quot;</code></li>
+<li>将日志导出为CSV格式并进行分析：<code>LogParser.exe -i:EVT -o:CSV &quot;SELECT * FROM C:\Windows\System32\winevt\logs\Security.evtx where EventID=4624&quot; &gt; C:\event.csv</code></li>
+<li>提取登录成功的用户名和IP：<code>LogParser.exe -i:EVT  –o:DATAGRID  &quot;SELECT EXTRACT_TOKEN(Message,13,' ') as EventType,TimeGenerated as LoginTime,EXTRACT_TOKEN(Strings,5,'|') as Username,EXTRACT_TOKEN(Message,38,' ') as Loginip FROM C:\Windows\System32\winevt\logs\Security.evtx where EventID=4624&quot;</code></li>
+<li>提取登录失败用户名进行聚合统计：<code>LogParser.exe  -i:EVT &quot;SELECT  EXTRACT_TOKEN(Message,13,' ')  as EventType,EXTRACT_TOKEN(Message,19,' ') as user,count(EXTRACT_TOKEN(Message,19,' ')) as Times,EXTRACT_TOKEN(Message,39,' ') as Loginip FROM C:\Windows\System32\winevt\logs\Security.evtx where EventID=4625 GROUP BY Message&quot;</code></li>
+</ul>
+<h2 id="webshell查杀工具">webshell查杀工具</h2>
+<ul>
+<li><a href="https://www.d99net.net/index.asp" target="_blank" rel="noopener noreffer ">D盾</a></li>
+<li><a href="https://www.shellpub.com" target="_blank" rel="noopener noreffer ">河马查杀</a></li>
+</ul>
+<h2 id="参考文章">参考文章</h2>
+<p><a href="https://bypass007.github.io/Emergency-Response-Notes/Summary/%E7%AC%AC1%E7%AF%87%EF%BC%9AWindow%E5%85%A5%E4%BE%B5%E6%8E%92%E6%9F%A5.html" target="_blank" rel="noopener noreffer ">https://bypass007.github.io/Emergency-Response-Notes/Summary/%E7%AC%AC1%E7%AF%87%EF%BC%9AWindow%E5%85%A5%E4%BE%B5%E6%8E%92%E6%9F%A5.html</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2023-07-17</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">应急响应</a>,&nbsp;<a href="/tags/%E8%93%9D%E9%98%9F/">蓝队</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/" class="prev" rel="prev" title="Docker逃逸判断三两事"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Docker逃逸判断三两事</a>
+            <a href="/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/" class="next" rel="next" title="记录网盘及一些工具的搭建">记录网盘及一些工具的搭建<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ev1l0o4g</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"data":{"id-1":"ev1l0o4g's blog","id-2":"ev1l0o4g's blog"},"search":{"algoliaAppID":"","algoliaIndex":"","algoliaSearchKey":"","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":30,"type":"algolia"},"typeit":{"cursorChar":"|","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":100}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

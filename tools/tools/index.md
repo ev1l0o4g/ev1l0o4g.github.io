@@ -10,6 +10,9 @@
 - [google-hacking-tools](https://google-hacking.ev1l0o4g.xyz/)
 - [Linux命令查询](https://linux.ev1l0o4g.xyz/)
 - [reverse-shell](https://reverse-shell.ev1l0o4g.xyz)
+- [Hack-Tools](https://hacktools.ev1l0o4g.xyz/)
+- [CyberChef](https://code.ev1l0o4g.xyz/)
+- [runtime-exec-payloads](https://runtime-exec-payloads.ev1l0o4g.xyz/)
 
 ## 漏扫工具
 - [nuclei](https://github.com/projectdiscovery/nuclei)

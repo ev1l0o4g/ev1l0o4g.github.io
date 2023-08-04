@@ -1,0 +1,20 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>闲散心情 - 分类 - ev1l0o4g&#39;s blog</title>
+        <link>https://ev1l0o4g.xyz/categories/%E9%97%B2%E6%95%A3%E5%BF%83%E6%83%85/</link>
+        <description>闲散心情 - 分类 - ev1l0o4g&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/categories/%E9%97%B2%E6%95%A3%E5%BF%83%E6%83%85/" rel="self" type="application/rss+xml" /><item>
+    <title>记录网盘及一些工具的搭建</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
+    <pubDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</guid>
+    <description><![CDATA[网盘 最近想着天翼云盘和阿里云盘各有2T空间闲着，过于浪费，现在自建网盘如此火热，何不物尽其用。看很多师傅用Alist搭建，应该也挺好用，就用了Alist。
+下载Alist Release相应版本文件到VPS并解压
+1 2 3 4 5 6 7 8 # 解压下载的文件，得到可执行文件： tar -zxvf alist-xxxx.tar.gz # 授予程序执行权限： chmod +x alist # 运行程序 ./alist server # 获得管理员信息 ./alist admin 使用任意方式编辑 /usr/lib/systemd/system/alist.service 并添加如下内容，其中 path_alist 为 AList 所在的路径：
+1 2 3 4 5 6 7 8 9 10 11 12 [Unit] Description=alist After=network.target [Service] Type=simple WorkingDirectory=path_alist ExecStart=path_alist/alist server Restart=on-failure [Install] WantedBy=multi-user.target 然后，执行 systemctl daemon-reload 重载配置，然后可以使用这些命令来管理程序：
+启动: systemctl start alist 关闭: systemctl stop alist 配置开机自启: systemctl enable alist 取消开机自启: systemctl disable alist 状态: systemctl status alist 重启: systemctl restart alist 若要更新，下载新版Alist，把之前的替换了即可。]]></description>
+</item>
+</channel>
+</rss>

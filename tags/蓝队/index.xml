@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>蓝队 - 标签 - ev1l0o4g&#39;s blog</title>
+        <link>https://ev1l0o4g.xyz/tags/%E8%93%9D%E9%98%9F/</link>
+        <description>蓝队 - 标签 - ev1l0o4g&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Mon, 17 Jul 2023 14:17:47 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/%E8%93%9D%E9%98%9F/" rel="self" type="application/rss+xml" /><item>
+    <title>一些查看Windows信息的操作</title>
+    <link>https://ev1l0o4g.xyz/%E4%B8%80%E4%BA%9B%E6%9F%A5%E7%9C%8Bwindows%E4%BF%A1%E6%81%AF%E7%9A%84%E6%93%8D%E4%BD%9C/</link>
+    <pubDate>Mon, 17 Jul 2023 14:17:47 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E4%B8%80%E4%BA%9B%E6%9F%A5%E7%9C%8Bwindows%E4%BF%A1%E6%81%AF%E7%9A%84%E6%93%8D%E4%BD%9C/</guid>
+    <description><![CDATA[查看账号信息 查看当前登录账户：queryuser 注销用户ID：logoff [ID] 查看用户：net user 查看用户登录情况：net user [username] 打开本地用户组：lusrmgr.msc 注册表查看账户，确认系统是否存在隐藏账户：regedit——&gt;HKEY_LOCAL_MACHINE\SAM\SAM\Domains\Account\Users\Names 查看端口进程 查看当前连接：netstat -ano 查看当前成功建立的连接：netstat -ano | findstr &ldquo;ESTABLISHED&rdquo; 根据pid定位程序：tasklist | findstr &ldquo;[pid]&rdquo; 根据端口查看pid：netstat -ano | findstr &ldquo;8080&rdquo; 在“正在运行任务”中获取进程详细信息（进程开始时间、版本、大小等）：运行——msinfo32——软件环境——正在运行任务 利用wmic查看进程执行时的命令： Wmic process where name='[进程名称]' get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value Wmic process where processid='[进程ID]' get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value 查看启动项 查看系统启动项：运行——msconfig 注册表查看是否有异常启动项： HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Runonce HKEY_CURRENT_USER\software\micorsoft\windows\currentversion\run 查看计划任务 查看定时任务：终端运行schtasks，win7使用at 查看任务清单：C:\Windows\System32\Tasks 删除计划任务（管理员）：SchTasks /Delete /TN [任务计划名称] 查看系统服务 查看服务：services.msc 删除服务：可手动删除，也可命令行删除。停止服务：sc stop [服务名称]；删除服务：sc delete [服务名称] 查看文件 查看最近打开的文件：&quot;%UserProfile%\Recent&quot; 查看C:\Documents and Settings和C:\Users下是否存在可疑用户或文件 查看日志 1 2 3 4 5 6 7 8 9 10 11 12 Windows安全日志文件在以下路径： Windows 7及之前的Windows版本：C:\Windows\System32\config\security.]]></description>
+</item>
+</channel>
+</rss>
