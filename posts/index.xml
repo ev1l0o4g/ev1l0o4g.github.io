@@ -4,7 +4,31 @@
         <link>https://ev1l0o4g.xyz/posts/</link>
         <description>所有文章 | ev1l0o4g&#39;s blog</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
-            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/posts/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Wed, 06 Sep 2023 16:29:08 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>记一些环境错误的修复</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/</link>
+    <pubDate>Wed, 06 Sep 2023 16:29:08 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/</guid>
+    <description><![CDATA[kali添加环境变量 golang安装工具后无法执行，需添加环境变量
+1 2 3 4 vim /etc/profile export PATH=/root/go/bin:$PATH source /etc/profile 但重启终端后依然无效，还需在/root/.zshrc添加
+1 2 3 4 vim /root/.zshrc export PATH=/root/go/bin:$PATH source /root/.zshrc ubuntu解决libc.so.6报错 ubuntu经常遇到libc.so.6报错： /XXXXX: /lib/x86_64-linux-gnu/libc.so.6: version 'GLIBC_2.32' not found (required by./XXXXX)
+试了众多方法，终于找到一个有效的：
+1 2 3 4 5 6 7 8 9 编辑更新源： vim /etc/apt/sources.list 添加 deb [http://th.archive.ubuntu.com/ubuntu](http://th.archive.ubuntu.com/ubuntu) jammy main 执行 apt-get update apt-get install libc6 ubuntu系统上systemd-resolved不使用127.0.0.53的方法 自建DNSlog总遇到53端口被占用，试了百度的几个方法也是治标不治本，甚至会影响服务器更新，试了下面的方法比较有效，也不影响服务器更新。 方法源于：https://dyrnq.com/ubuntu-update-etc-resolve-conf/
+有些文章说用关闭（删除）systemd-resolved ，而使用 resolvconf 、openresolv、Unbound 替换，测试发现在ubuntu 20.04.2 LTS NetworkManager已经被 systemd-networkd 取代，复杂度（依赖关系）较高。所以研究依然保持使用systemd-resolved而不使用127.0.0.53的配置思路。]]></description>
+</item>
+<item>
+    <title>WinRAR代码执行漏洞CVE 2023 38831复现</title>
+    <link>https://ev1l0o4g.xyz/winrar%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9Ecve-2023-38831%E5%A4%8D%E7%8E%B0/</link>
+    <pubDate>Mon, 28 Aug 2023 15:43:55 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/winrar%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9Ecve-2023-38831%E5%A4%8D%E7%8E%B0/</guid>
+    <description><![CDATA[复现环境 Windows11（貌似自带7-zip） WinRAR 6.20 漏洞详情 WinRAR 在处理压缩包内同名的文件与文件夹时代码执行漏洞，攻击者构建由恶意文件与非恶意文件构成的特制压缩包文件，诱导受害者打开此文件后，将在受害者机器上执行任意代码。
+影响版本 WinRAR &lt; 6.23
+漏洞复现 创建CVE-2023-38831文件夹，在该文件夹创建test文件夹，test文件夹内创建38831.txt文件，内容随意。 回到CVE-2023-38831文件夹，创建新的文件夹，命名为38831.txt。 接着在38831.txt文件夹创建名为38831.txt .cmd文件，注意有空格，内容为弹calc。 使用WinRAR将38831.txt文件夹重命名压缩 并追加test文件夹内的38831.txt文件 使用WinRAR打开压缩后的exploit_38831.zip文件，在38831.txt后追加一个空格 双击38831.txt文件即可执行命令 该漏洞可用于钓鱼，若受害者使用的WinRAR版本低于6.23，打开了攻击者构造的恶意文件即可达到攻击者目的。
+漏洞修复 升级WinRAR至6.23及以上。 https://www.rarlab.com/]]></description>
+</item>
+<item>
     <title>记录网盘及一些工具的搭建</title>
     <link>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
     <pubDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</pubDate>

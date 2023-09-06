@@ -1,0 +1,21 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>琐事 - 标签 - ev1l0o4g&#39;s blog</title>
+        <link>https://ev1l0o4g.xyz/tags/%E7%90%90%E4%BA%8B/</link>
+        <description>琐事 - 标签 - ev1l0o4g&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Wed, 06 Sep 2023 16:29:08 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/%E7%90%90%E4%BA%8B/" rel="self" type="application/rss+xml" /><item>
+    <title>记一些环境错误的修复</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/</link>
+    <pubDate>Wed, 06 Sep 2023 16:29:08 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/</guid>
+    <description><![CDATA[kali添加环境变量 golang安装工具后无法执行，需添加环境变量
+1 2 3 4 vim /etc/profile export PATH=/root/go/bin:$PATH source /etc/profile 但重启终端后依然无效，还需在/root/.zshrc添加
+1 2 3 4 vim /root/.zshrc export PATH=/root/go/bin:$PATH source /root/.zshrc ubuntu解决libc.so.6报错 ubuntu经常遇到libc.so.6报错： /XXXXX: /lib/x86_64-linux-gnu/libc.so.6: version 'GLIBC_2.32' not found (required by./XXXXX)
+试了众多方法，终于找到一个有效的：
+1 2 3 4 5 6 7 8 9 编辑更新源： vim /etc/apt/sources.list 添加 deb [http://th.archive.ubuntu.com/ubuntu](http://th.archive.ubuntu.com/ubuntu) jammy main 执行 apt-get update apt-get install libc6 ubuntu系统上systemd-resolved不使用127.0.0.53的方法 自建DNSlog总遇到53端口被占用，试了百度的几个方法也是治标不治本，甚至会影响服务器更新，试了下面的方法比较有效，也不影响服务器更新。 方法源于：https://dyrnq.com/ubuntu-update-etc-resolve-conf/
+有些文章说用关闭（删除）systemd-resolved ，而使用 resolvconf 、openresolv、Unbound 替换，测试发现在ubuntu 20.04.2 LTS NetworkManager已经被 systemd-networkd 取代，复杂度（依赖关系）较高。所以研究依然保持使用systemd-resolved而不使用127.0.0.53的配置思路。]]></description>
+</item>
+</channel>
+</rss>

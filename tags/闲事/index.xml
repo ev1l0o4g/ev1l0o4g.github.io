@@ -1,10 +1,10 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>闲散心情 - 分类 - ev1l0o4g&#39;s blog</title>
-        <link>https://ev1l0o4g.xyz/categories/%E9%97%B2%E6%95%A3%E5%BF%83%E6%83%85/</link>
-        <description>闲散心情 - 分类 - ev1l0o4g&#39;s blog</description>
+        <title>闲事 - 标签 - ev1l0o4g&#39;s blog</title>
+        <link>https://ev1l0o4g.xyz/tags/%E9%97%B2%E4%BA%8B/</link>
+        <description>闲事 - 标签 - ev1l0o4g&#39;s blog</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
-            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/categories/%E9%97%B2%E6%95%A3%E5%BF%83%E6%83%85/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/%E9%97%B2%E4%BA%8B/" rel="self" type="application/rss+xml" /><item>
     <title>记录网盘及一些工具的搭建</title>
     <link>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
     <pubDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</pubDate>

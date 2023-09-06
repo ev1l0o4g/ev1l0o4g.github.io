@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>记一些环境错误的修复 - ev1l0o4g&#39;s blog</title><meta name="Description" content="记录生活与学习"><meta property="og:title" content="记一些环境错误的修复" />
+<meta property="og:description" content="kali添加环境变量 golang安装工具后无法执行，需添加环境变量
+1 2 3 4 vim /etc/profile export PATH=/root/go/bin:$PATH source /etc/profile 但重启终端后依然无效，还需在/root/.zshrc添加
+1 2 3 4 vim /root/.zshrc export PATH=/root/go/bin:$PATH source /root/.zshrc ubuntu解决libc.so.6报错 ubuntu经常遇到libc.so.6报错： /XXXXX: /lib/x86_64-linux-gnu/libc.so.6: version &#39;GLIBC_2.32&#39; not found (required by./XXXXX)
+试了众多方法，终于找到一个有效的：
+1 2 3 4 5 6 7 8 9 编辑更新源： vim /etc/apt/sources.list 添加 deb [http://th.archive.ubuntu.com/ubuntu](http://th.archive.ubuntu.com/ubuntu) jammy main 执行 apt-get update apt-get install libc6 ubuntu系统上systemd-resolved不使用127.0.0.53的方法 自建DNSlog总遇到53端口被占用，试了百度的几个方法也是治标不治本，甚至会影响服务器更新，试了下面的方法比较有效，也不影响服务器更新。 方法源于：https://dyrnq.com/ubuntu-update-etc-resolve-conf/
+有些文章说用关闭（删除）systemd-resolved ，而使用 resolvconf 、openresolv、Unbound 替换，测试发现在ubuntu 20.04.2 LTS NetworkManager已经被 systemd-networkd 取代，复杂度（依赖关系）较高。所以研究依然保持使用systemd-resolved而不使用127.0.0.53的配置思路。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/" /><meta property="og:image" content="https://ev1l0o4g.xyz/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-09-06T16:29:08+08:00" />
+<meta property="article:modified_time" content="2023-09-06T16:29:08+08:00" /><meta property="og:site_name" content="ev1l0o4g&#39;s blog" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://ev1l0o4g.xyz/images/avatar.png"/>
+
+<meta name="twitter:title" content="记一些环境错误的修复"/>
+<meta name="twitter:description" content="kali添加环境变量 golang安装工具后无法执行，需添加环境变量
+1 2 3 4 vim /etc/profile export PATH=/root/go/bin:$PATH source /etc/profile 但重启终端后依然无效，还需在/root/.zshrc添加
+1 2 3 4 vim /root/.zshrc export PATH=/root/go/bin:$PATH source /root/.zshrc ubuntu解决libc.so.6报错 ubuntu经常遇到libc.so.6报错： /XXXXX: /lib/x86_64-linux-gnu/libc.so.6: version &#39;GLIBC_2.32&#39; not found (required by./XXXXX)
+试了众多方法，终于找到一个有效的：
+1 2 3 4 5 6 7 8 9 编辑更新源： vim /etc/apt/sources.list 添加 deb [http://th.archive.ubuntu.com/ubuntu](http://th.archive.ubuntu.com/ubuntu) jammy main 执行 apt-get update apt-get install libc6 ubuntu系统上systemd-resolved不使用127.0.0.53的方法 自建DNSlog总遇到53端口被占用，试了百度的几个方法也是治标不治本，甚至会影响服务器更新，试了下面的方法比较有效，也不影响服务器更新。 方法源于：https://dyrnq.com/ubuntu-update-etc-resolve-conf/
+有些文章说用关闭（删除）systemd-resolved ，而使用 resolvconf 、openresolv、Unbound 替换，测试发现在ubuntu 20.04.2 LTS NetworkManager已经被 systemd-networkd 取代，复杂度（依赖关系）较高。所以研究依然保持使用systemd-resolved而不使用127.0.0.53的配置思路。"/>
+<meta name="application-name" content="ev1l0o4g&#39;s blog">
+<meta name="apple-mobile-web-app-title" content="ev1l0o4g&#39;s blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/" /><link rel="prev" href="https://ev1l0o4g.xyz/winrar%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9Ecve-2023-38831%E5%A4%8D%E7%8E%B0/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "记一些环境错误的修复",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/ev1l0o4g.xyz\/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D\/"
+        },"image": ["https:\/\/ev1l0o4g.xyz\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "琐事","wordcount":  176 ,
+        "url": "https:\/\/ev1l0o4g.xyz\/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D\/","datePublished": "2023-09-06T16:29:08+08:00","dateModified": "2023-09-06T16:29:08+08:00","publisher": {
+            "@type": "Organization",
+            "name": "ev1l0o4g","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/ev1l0o4g.xyz\/images\/avatar.png",
+                    "width":  850 ,
+                    "height":  629 
+                }},"author": {
+                "@type": "Person",
+                "name": "ev1l0o4g"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="ev1l0o4g&#39;s blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span><span id="id-1" class="typeit"></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="https://mynav.ev1l0o4g.xyz/" rel="noopener noreffer" target="_blank"> 导航页 </a><a class="menu-item" href="https://ai.ev1l0o4g.xyz" rel="noopener noreffer" target="_blank"> AI </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tools/tools"> 武器库 </a><a class="menu-item" href="/friends/friends"> 友链 </a><a class="menu-item" href="/about/about"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="ev1l0o4g&#39;s blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span><span id="id-2" class="typeit"></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="https://mynav.ev1l0o4g.xyz/" title="" rel="noopener noreffer" target="_blank">导航页</a><a class="menu-item" href="https://ai.ev1l0o4g.xyz" title="" rel="noopener noreffer" target="_blank">AI</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tools/tools" title="">武器库</a><a class="menu-item" href="/friends/friends" title="">友链</a><a class="menu-item" href="/about/about" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">记一些环境错误的修复</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>ev1l0o4g</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%87%A1%E5%B0%98%E4%BF%97%E4%BA%8B/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>凡尘俗事</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-09-06">2023-09-06</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 176 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#kali添加环境变量">kali添加环境变量</a></li>
+    <li><a href="#ubuntu解决libcso6报错">ubuntu解决libc.so.6报错</a></li>
+    <li><a href="#ubuntu系统上systemd-resolved不使用1270053的方法">ubuntu系统上systemd-resolved不使用127.0.0.53的方法</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="kali添加环境变量">kali添加环境变量</h1>
+<p>golang安装工具后无法执行，需添加环境变量</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">vim /etc/profile
+</span></span><span class="line"><span class="cl">export PATH=/root/go/bin:$PATH
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">source /etc/profile
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>但重启终端后依然无效，还需在<code>/root/.zshrc</code>添加</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">vim /root/.zshrc
+</span></span><span class="line"><span class="cl">export PATH=/root/go/bin:$PATH
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">source /root/.zshrc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="ubuntu解决libcso6报错">ubuntu解决libc.so.6报错</h1>
+<p>ubuntu经常遇到libc.so.6报错：
+<code>/XXXXX: /lib/x86_64-linux-gnu/libc.so.6: version 'GLIBC_2.32' not found (required by./XXXXX)</code></p>
+<p>试了众多方法，终于找到一个有效的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">编辑更新源：
+</span></span><span class="line"><span class="cl">vim /etc/apt/sources.list
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">添加
+</span></span><span class="line"><span class="cl">deb [http://th.archive.ubuntu.com/ubuntu](http://th.archive.ubuntu.com/ubuntu) jammy main
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">执行
+</span></span><span class="line"><span class="cl">apt-get update
+</span></span><span class="line"><span class="cl">apt-get install libc6
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="ubuntu系统上systemd-resolved不使用1270053的方法">ubuntu系统上systemd-resolved不使用127.0.0.53的方法</h1>
+<p>自建DNSlog总遇到53端口被占用，试了百度的几个方法也是治标不治本，甚至会影响服务器更新，试了下面的方法比较有效，也不影响服务器更新。
+方法源于：https://dyrnq.com/ubuntu-update-etc-resolve-conf/</p>
+<p>有些文章说用关闭（删除）<code>systemd-resolved</code> ，而使用 resolvconf 、openresolv、Unbound 替换，测试发现在ubuntu 20.04.2 LTS <code>NetworkManager</code>已经被 <code>systemd-networkd</code> 取代，复杂度（依赖关系）较高。所以研究依然保持使用<code>systemd-resolved</code>而不使用<code>127.0.0.53</code>的配置思路。</p>
+<p>后来发现<code>systemd-resolved</code>会产出两个运行配置，如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/run/systemd/resolve/resolv.conf
+</span></span><span class="line"><span class="cl">/run/systemd/resolve/stub-resolv.conf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>默认<code>/etc/resolv.conf</code> 软链接到<code>/run/systemd/resolve/stub-resolv.conf</code>，那么只需将<code>/etc/resolv.conf</code> 软链接到<code>/run/systemd/resolve/resolv.conf</code></p>
+<p>而/run/systemd/resolve/* 生成的配置文件是由<code>/etc/systemd/resolved.conf</code> 决定，于是就写了下边的配置脚本，放到服务器上一执行，确实已经不是指向127.0.0.53了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mkdir -p /etc/systemd/resolved.conf.d/
+</span></span><span class="line"><span class="cl">cat &gt;/etc/systemd/resolved.conf.d/99-dns.conf &lt;&lt; EOF
+</span></span><span class="line"><span class="cl">[Resolve]
+</span></span><span class="line"><span class="cl">DNS=114.114.114.114 8.8.8.8
+</span></span><span class="line"><span class="cl">EOF
+</span></span><span class="line"><span class="cl">ln -s -f /run/systemd/resolve/resolv.conf /etc/resolv.conf
+</span></span><span class="line"><span class="cl">systemctl daemon-reload &amp;&amp; systemctl restart systemd-resolved.service &amp;&amp; systemctl status -l systemd-resolved.service --no-pager
+</span></span><span class="line"><span class="cl">cat /etc/resolv.conf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>主要参考了<a href="https://unix.stackexchange.com/questions/612416/why-does-etc-resolv-conf-point-at-127-0-0-53" target="_blank" rel="noopener noreffer ">这篇</a></p>
+<p>下文是讲解了为啥systemd-resolved要搞127.0.0.53:53</p>
+<p><a href="https://youtu.be/DtFjrJdnWAU" target="_blank" rel="noopener noreffer ">How and why (not) to use the 127.0.0.53 nameserver, systemd-resolved and resolvctl Or what is systemd-resolved and how it is integrated on Ubuntu</a></p>
+<p>既然不用127.0.0.53了，那么我们能直接关闭127.0.0.53:53吗？</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mkdir -p /etc/systemd/resolved.conf.d/
+</span></span><span class="line"><span class="cl">cat &gt;/etc/systemd/resolved.conf.d/98-disable-127-53.conf &lt;&lt; EOF
+</span></span><span class="line"><span class="cl">[Resolve]
+</span></span><span class="line"><span class="cl">DNSStubListener=no
+</span></span><span class="line"><span class="cl">EOF
+</span></span><span class="line"><span class="cl">systemctl daemon-reload &amp;&amp; systemctl restart systemd-resolved.service &amp;&amp; systemctl status -l systemd-resolved.service --no-pager
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>执行后再<code>ss -tunlp</code> 查看53端口，127.0.0.53:53监听已经没了。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2023-09-06</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E7%90%90%E4%BA%8B/">琐事</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/winrar%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9Ecve-2023-38831%E5%A4%8D%E7%8E%B0/" class="prev" rel="prev" title="WinRAR代码执行漏洞CVE 2023 38831复现"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>WinRAR代码执行漏洞CVE 2023 38831复现</a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ev1l0o4g</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"data":{"id-1":"ev1l0o4g's blog","id-2":"ev1l0o4g's blog"},"search":{"algoliaAppID":"","algoliaIndex":"","algoliaSearchKey":"","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":30,"type":"algolia"},"typeit":{"cursorChar":"|","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":100}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
