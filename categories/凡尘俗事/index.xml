@@ -4,7 +4,36 @@
         <link>https://ev1l0o4g.xyz/categories/%E5%87%A1%E5%B0%98%E4%BF%97%E4%BA%8B/</link>
         <description>凡尘俗事 - 分类 - ev1l0o4g&#39;s blog</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
-            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Wed, 06 Sep 2023 16:29:08 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/categories/%E5%87%A1%E5%B0%98%E4%BF%97%E4%BA%8B/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Thu, 30 Nov 2023 10:41:25 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/categories/%E5%87%A1%E5%B0%98%E4%BF%97%E4%BA%8B/" rel="self" type="application/rss+xml" /><item>
+    <title>UBlockOrigin屏蔽github弱智</title>
+    <link>https://ev1l0o4g.xyz/ublockorigin%E5%B1%8F%E8%94%BDgithub%E5%BC%B1%E6%99%BA/</link>
+    <pubDate>Thu, 30 Nov 2023 10:41:25 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/ublockorigin%E5%B1%8F%E8%94%BDgithub%E5%BC%B1%E6%99%BA/</guid>
+    <description><![CDATA[uBlock Origin插件在自定义静态规则添加如下规则：
+1 2 3 4 5 6 7 8 9 github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(cirosantilli) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(cheezcharmer) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(zaohmeing) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(zhaohmng-outlook-com) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(codin-stuffs) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(Dimples1337) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(pxvr-official) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(zpc1314521) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(b0LBwZ7r5HOeh6CBMuQIhVu3-s-random-fork) ]]></description>
+</item>
+<item>
+    <title>记灯塔ARL的搭建</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E7%81%AF%E5%A1%94arl%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
+    <pubDate>Sun, 12 Nov 2023 22:03:25 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E7%81%AF%E5%A1%94arl%E7%9A%84%E6%90%AD%E5%BB%BA/</guid>
+    <description><![CDATA[灯塔找资产还是挺好用的！
+docker安装ARL 1 2 3 4 5 6 7 8 cd /opt/ mkdir docker_arl wget -O docker_arl/docker.zip https://github.com/TophantTechnology/ARL/releases/download/v2.6/docker.zip cd docker_arl unzip -o docker.zip docker-compose pull docker volume create arl_db docker-compose up -d 如果pull失败，要么用代理，要么换docker镜像源。记得docker启动前修改配置文件，添加fofa/hunter/quake密钥。
+批量导入POC 在docker_arl目录创建poc文件夹，将POC文件放在/docker_arl/poc路径，docker重启ARL即可。
+批量导入指纹 要想批量导入指纹，可以使用使用ARL-Finger-ADD ARL-Finger-ADD批量导入的是Ehole3.0的指纹，嫌指纹少可以用各大佬的魔改版Ehole指纹。]]></description>
+</item>
+<item>
+    <title>记win11终端ssh配置和Ubuntu设置root登录</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0win11%E7%BB%88%E7%AB%AFssh%E9%85%8D%E7%BD%AE%E5%92%8Cubuntu%E8%AE%BE%E7%BD%AEroot%E7%99%BB%E5%BD%95/</link>
+    <pubDate>Sun, 12 Nov 2023 20:21:17 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0win11%E7%BB%88%E7%AB%AFssh%E9%85%8D%E7%BD%AE%E5%92%8Cubuntu%E8%AE%BE%E7%BD%AEroot%E7%99%BB%E5%BD%95/</guid>
+    <description><![CDATA[win11终端配置 win11自带SSH，如果在把服务器添加到win11终端岂不是方便了许多。 操作很简单，在终端新建配置文件，命令行改为ssh的命令，给配置文件起个名，保存就完事 甚至还能设置自己心爱的logo，缺点就是每次要输密码，不过也可以密钥免密登录 Ubuntu设置root登录 上次出差因为酒店房间线路短路，导致前任电脑出现了硬伤，无奈只好含（喜）泪重（提）金购置小“外星人”。 重装ubuntu虚拟机就很烦，桌面版ubuntu默认禁止root登录，想要以root用户进行登录需要进行一些操作，如下：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 一、 修改文件/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf文件，增加两行： greeter-show-manual-login=true all-guest=false 保存 二、 进入/etc/pam.d目录，修改gdm-autologin和gdm-password文件 vi gdm-autologin 注释掉auth required pam_succeed_if.so user != root quiet_success这一行，保存 vi gdm-password 注释掉 auth required pam_succeed_if.so user != root quiet_success这一行，保存 三、 修改/root/.profile文件 vi /root/.profile 将文件末尾的mesg n || true这一行修改成tty -s&amp;&amp;mesg n || true， 保存 四、 重启系统，输入root用户名和密码，登录系统。 五、 vim /etc/gdm3/custom.]]></description>
+</item>
+<item>
     <title>记一些环境错误的修复</title>
     <link>https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/</link>
     <pubDate>Wed, 06 Sep 2023 16:29:08 &#43;0800</pubDate>
@@ -19,10 +48,10 @@
 </item>
 <item>
     <title>记录网盘及一些工具的搭建</title>
-    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
     <pubDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</pubDate>
     <author>ev1l0o4g</author>
-    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</guid>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</guid>
     <description><![CDATA[网盘 最近想着天翼云盘和阿里云盘各有2T空间闲着，过于浪费，现在自建网盘如此火热，何不物尽其用。看很多师傅用Alist搭建，应该也挺好用，就用了Alist。
 下载Alist Release相应版本文件到VPS并解压
 1 2 3 4 5 6 7 8 # 解压下载的文件，得到可执行文件： tar -zxvf alist-xxxx.tar.gz # 授予程序执行权限： chmod +x alist # 运行程序 ./alist server # 获得管理员信息 ./alist admin 使用任意方式编辑 /usr/lib/systemd/system/alist.service 并添加如下内容，其中 path_alist 为 AList 所在的路径：

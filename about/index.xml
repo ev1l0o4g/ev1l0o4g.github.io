@@ -8,12 +8,12 @@
     <language>zh-CN</language>
     <managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
     <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster>
-    <lastBuildDate>Fri, 02 Aug 2019 11:04:49 +0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/about/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 02 Aug 2019 11:04:49 +0800</lastBuildDate>
+    <atom:link href="https://ev1l0o4g.xyz/about/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>关于 ev1l0o4g</title>
       <link>https://ev1l0o4g.xyz/about/about/</link>
-      <pubDate>Fri, 02 Aug 2019 11:04:49 +0800</pubDate>
-      <author>ev1l0o4g@gmail.com (ev1l0o4g)</author>
+      <pubDate>Fri, 02 Aug 2019 11:04:49 +0800</pubDate><author>ev1l0o4g@gmail.com (ev1l0o4g)</author>
       <guid>https://ev1l0o4g.xyz/about/about/</guid>
       <description>欢迎来到我的小站呀，很高兴遇见你！🤝
 🏠 关于本站 以前车马满，一生只够爱一人，现在生活节奏太快，以至于让人喘不过气来。不妨每天抽出一两小时看看书、喝喝茶、听听歌，本站就是主要用于记录学习笔记，记录生活的美好片刻。
@@ -22,6 +22,5 @@
 ⛹ 兴趣爱好 吃喝拉撒睡
 📬 联系我呀 ev1l0o4g@gmail.com</description>
     </item>
-    
   </channel>
 </rss>

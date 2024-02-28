@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-	<meta name="generator" content="Hugo 0.114.1">
+	<meta name="generator" content="Hugo 0.120.3">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
@@ -9,11 +9,13 @@
 <meta property="og:description" content="记录生活与学习" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://ev1l0o4g.xyz/" /><meta property="og:image" content="https://ev1l0o4g.xyz/images/avatar.png"/><meta property="og:site_name" content="ev1l0o4g&#39;s blog" />
+
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://ev1l0o4g.xyz/images/avatar.png"/>
 
 <meta name="twitter:title" content="ev1l0o4g&#39;s blog"/>
 <meta name="twitter:description" content="记录生活与学习"/>
+<meta name="twitter:site" content="@ducoduko"/>
 <meta name="application-name" content="ev1l0o4g&#39;s blog">
 <meta name="apple-mobile-web-app-title" content="ev1l0o4g&#39;s blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://ev1l0o4g.xyz/" /><link rel="alternate" href="/index.xml" type="application/rss+xml" title="ev1l0o4g&#39;s blog">
     <link rel="feed" href="/index.xml" type="application/rss+xml" title="ev1l0o4g&#39;s blog"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -97,6 +99,39 @@
         alt="/images/avatar.png"
         title="/images/avatar.png" width="850" height="629" /></a></div><h1 class="home-title">ev1l0o4g's blog</h1><div class="home-subtitle"><div id="id-3" class="typeit"></div></div><div class="links"><a href="https://github.com/LOONG001" title="GitHub" target="_blank" rel="noopener noreffer me"><i class="fab fa-github fa-fw" aria-hidden="true"></i></a><a href="https://twitter.com/ducoduko" title="Twitter" target="_blank" rel="noopener noreffer me"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="https://space.bilibili.com/151135659" title="bilibili" target="_blank" rel="noopener noreffer me"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/bilibili.svg" aria-hidden="true"></i></a><a href="mailto:ev1l0o4g@gmail.com" title="Email" rel="me"><i class="far fa-envelope fa-fw" aria-hidden="true"></i></a></div></div>
 <article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/">记录网盘及一些工具的搭建</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>ev1l0o4g</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-08-04">2023-08-04</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%87%A1%E5%B0%98%E4%BF%97%E4%BA%8B/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>凡尘俗事</a></span></div><div class="content">网盘 最近想着天翼云盘和阿里云盘各有2T空间闲着，过于浪费，现在自建网盘如此火热，何不物尽其用。看很多师傅用Alist搭建，应该也挺好用，就用了Alist。
+下载Alist Release相应版本文件到VPS并解压
+1 2 3 4 5 6 7 8 # 解压下载的文件，得到可执行文件： tar -zxvf alist-xxxx.tar.gz # 授予程序执行权限： chmod +x alist # 运行程序 ./alist server # 获得管理员信息 ./alist admin 使用任意方式编辑 /usr/lib/systemd/system/alist.service 并添加如下内容，其中 path_alist 为 AList 所在的路径：
+1 2 3 4 5 6 7 8 9 10 11 12 [Unit] Description=alist After=network.target [Service] Type=simple WorkingDirectory=path_alist ExecStart=path_alist/alist server Restart=on-failure [Install] WantedBy=multi-user.target 然后，执行 systemctl daemon-reload 重载配置，然后可以使用这些命令来管理程序：
+启动: systemctl start alist 关闭: systemctl stop alist 配置开机自启: systemctl enable alist 取消开机自启: systemctl disable alist 状态: systemctl status alist 重启: systemctl restart alist 若要更新，下载新版Alist，把之前的替换了即可。</div><div class="post-footer">
+        <a href="/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/">阅读全文</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E9%97%B2%E4%BA%8B/">闲事</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/%E4%B8%80%E4%BA%9B%E6%9F%A5%E7%9C%8Bwindows%E4%BF%A1%E6%81%AF%E7%9A%84%E6%93%8D%E4%BD%9C/">一些查看Windows信息的操作</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>ev1l0o4g</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-07-17">2023-07-17</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>应急响应</a></span></div><div class="content">查看账号信息 查看当前登录账户：queryuser 注销用户ID：logoff [ID] 查看用户：net user 查看用户登录情况：net user [username] 打开本地用户组：lusrmgr.msc 注册表查看账户，确认系统是否存在隐藏账户：regedit——&gt;HKEY_LOCAL_MACHINE\SAM\SAM\Domains\Account\Users\Names 查看端口进程 查看当前连接：netstat -ano 查看当前成功建立的连接：netstat -ano | findstr &ldquo;ESTABLISHED&rdquo; 根据pid定位程序：tasklist | findstr &ldquo;[pid]&rdquo; 根据端口查看pid：netstat -ano | findstr &ldquo;8080&rdquo; 在“正在运行任务”中获取进程详细信息（进程开始时间、版本、大小等）：运行——msinfo32——软件环境——正在运行任务 利用wmic查看进程执行时的命令： Wmic process where name='[进程名称]' get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value Wmic process where processid='[进程ID]' get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value 查看启动项 查看系统启动项：运行——msconfig 注册表查看是否有异常启动项： HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Runonce HKEY_CURRENT_USER\software\micorsoft\windows\currentversion\run 查看计划任务 查看定时任务：终端运行schtasks，win7使用at 查看任务清单：C:\Windows\System32\Tasks 删除计划任务（管理员）：SchTasks /Delete /TN [任务计划名称] 查看系统服务 查看服务：services.msc 删除服务：可手动删除，也可命令行删除。停止服务：sc stop [服务名称]；删除服务：sc delete [服务名称] 查看文件 查看最近打开的文件：&quot;%UserProfile%\Recent&quot; 查看C:\Documents and Settings和C:\Users下是否存在可疑用户或文件 查看日志 1 2 3 4 5 6 7 8 9 10 11 12 Windows安全日志文件在以下路径： Windows 7及之前的Windows版本：C:\Windows\System32\config\security.</div><div class="post-footer">
+        <a href="/%E4%B8%80%E4%BA%9B%E6%9F%A5%E7%9C%8Bwindows%E4%BF%A1%E6%81%AF%E7%9A%84%E6%93%8D%E4%BD%9C/">阅读全文</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">应急响应</a>,&nbsp;<a href="/tags/%E8%93%9D%E9%98%9F/">蓝队</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/">Docker逃逸判断三两事</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>ev1l0o4g</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-07-06">2023-07-06</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>内网安全</a></span></div><div class="content">最近测试再次遇到一个docker环境的情况，有些东西还是要现查现找，这次顺便再学习学习，一切皆来源于TWiki。
+检测判断 判断是否为容器环境 1 cat /proc/1/cgroup | grep -qi docker &amp;&amp; echo &#34;Is Docker&#34; || echo &#34;Not Docker&#34; 判断逃逸方法 在开始之前对于容器逃逸主要有以下三种方法：
+不安全的配置 相关程序漏洞 内核漏洞 由于「相关程序漏洞」这种逃逸方法需要根据目标 Docker 的版本去判断，这里暂时没想到从容器内部获取 Docker 版本的方法，因此暂时还不支持这块的检测。
+不安全的配置 特权模式 1 cat /proc/self/status | grep -qi &#34;0000003fffffffff&#34; &amp;&amp; echo &#34;Is privileged mode&#34; || echo &#34;Not privileged mode&#34; 如果返回 Is privileged mode 则说明当前是特权模式；如果返回 Not privileged mode 则说明当前不是特权模式。 2. 挂载Docker Socket
+1 ls /var/run/ | grep -qi docker.sock &amp;&amp; echo &#34;Docker Socket is mounted.</div><div class="post-footer">
+        <a href="/docker%E9%80%83%E9%80%B8%E5%88%A4%E6%96%AD%E4%B8%89%E4%B8%A4%E4%BA%8B/">阅读全文</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/docker/">docker</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/linux%E6%8F%90%E6%9D%83%E4%B9%8Bsuid%E6%8F%90%E6%9D%83/">Linux提权之suid提权</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>ev1l0o4g</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-06-27">2023-06-27</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>内网安全</a></span></div><div class="content">环境：靶场insecurity
+什么是suid SUID是赋予文件的一种特殊权限，具有这种特殊权限的文件会在其执行时，使调用者暂时获得该文件属主的权限。如果某些现有的二进制文件和实用程序具有SUID权限的话，就可以在执行时将权限提升为root。 SUID提权的原理与Linux进程的UID有关，进程在运行的时候有以下三个UID：
+1 2 3 （A）Real UID：执行该进程的用户的UID。Real UID只用于标识用户，不用于权限检查。 （B）Effective UID（EUID）：进程执行时生效的UID。在对访问目标进行操作时，系统会检查EUID是否有权限。一般情况下，Real UID与EUID相同，但在运行设置了SUID权限的程序时，进程的EUID会被设置为程序文件属主的UID。 （C）Saved UID：在高权限用户降权后，保留的UID。 如果某个设置了SUID权限的程序运行后创建了shell，那么shell进程的EUID也会是这个程序文件属主的UID，如果属主为root，便是一个root shell。root shell中运行的程序的EUID也都是0，具备超级权限，于是便实现了提权。 使用chmod u+s [文件]命令为文件配置SUID权限。
+提权操作 suid提权其实就是查找具有特定suid权限的参数，再利用其参数进行提权命令调用。suid提权仅对可执行二进制文件有效。 查看本机用有suid权限的文件：
+1 2 3 4 find / -user root -perm -4000 -print 2&gt;/dev/null find / -perm -u=s -type f 2&gt;/dev/null find / -user root -perm -4000 -exec ls -ldb {} \; find / -perm -4000 -type f -exec ls -la {} 2&gt;/dev/null \; taskset
+执行命令 taskset 1 /bin/bash -p，成功获取到root权限，提权成功 xxd</div><div class="post-footer">
+        <a href="/linux%E6%8F%90%E6%9D%83%E4%B9%8Bsuid%E6%8F%90%E6%9D%83/">阅读全文</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E6%8F%90%E6%9D%83/">提权</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
         <a href="/%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E6%94%B6%E9%9B%86%E5%B0%8F%E7%BB%93/">目标资产收集小结</a>
     </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>ev1l0o4g</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-06-27">2023-06-27</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>信息收集</a></span></div><div class="content">icp备案 通常演练时会告知目标单位的名字，但可能不是全称，而是简称或者缺少某些关键字，这时需要百度目标单位的全称。 获取全称后在工信部备案网站查询目标单位备案的域名，这样查询到的资产最准确，也保证了后面子域名的准确性，不至于最后收获的是“非目标单位资产”。 也可以在企查查/天眼查/小蓝书网站查询，关注官网、邮箱、备案号、公众号、小程序等。
 子域名 域名明确了下一步进行子域名收集。
@@ -127,8 +162,8 @@ nmap -sS -Pn -n --open 122.14.193.200 --min-hostgroup 4 --min-parallelism 1024 -
                     </span>
                 </li></ul></div></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ev1l0o4g</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.120.3">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ev1l0o4g</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
 

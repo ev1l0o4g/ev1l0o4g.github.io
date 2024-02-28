@@ -21,6 +21,7 @@ nmap -sS -Pn -n --open 122.14.193.200 --min-hostgroup 4 --min-parallelism 1024 -
 <meta property="og:url" content="https://ev1l0o4g.xyz/%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E6%94%B6%E9%9B%86%E5%B0%8F%E7%BB%93/" /><meta property="og:image" content="https://ev1l0o4g.xyz/images/avatar.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-06-27T15:16:20+08:00" />
 <meta property="article:modified_time" content="2023-06-27T15:16:20+08:00" /><meta property="og:site_name" content="ev1l0o4g&#39;s blog" />
+
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://ev1l0o4g.xyz/images/avatar.png"/>
 
@@ -37,6 +38,7 @@ google语法 site:baidu.com -www
 端口 目前好用的有naabu和nmap，但是速度都有点慢。
 naabu -host [IP] -p - -nmap-cli &quot;nmap -sV&quot;
 nmap -sS -Pn -n --open 122.14.193.200 --min-hostgroup 4 --min-parallelism 1024 --host-timeout 30 -T4 -v -p 1-65535 嫌慢的话直接用空间搜索引擎查看也可以。"/>
+<meta name="twitter:site" content="@ducoduko"/>
 <meta name="application-name" content="ev1l0o4g&#39;s blog">
 <meta name="apple-mobile-web-app-title" content="ev1l0o4g&#39;s blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://ev1l0o4g.xyz/%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E6%94%B6%E9%9B%86%E5%B0%8F%E7%BB%93/" /><link rel="prev" href="https://ev1l0o4g.xyz/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%BC%96%E7%A0%81%E8%A7%A3%E7%A0%81/" /><link rel="next" href="https://ev1l0o4g.xyz/linux%E6%8F%90%E6%9D%83%E4%B9%8Bsuid%E6%8F%90%E6%9D%83/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -188,9 +190,9 @@ nmap -sS -Pn -n --open 122.14.193.200 --min-hostgroup 4 --min-parallelism 1024 -
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">* 首先查看https获得网站证书序列号；
-</span></span><span class="line"><span class="cl">* 将序列号十六进制转换成十进制（https://tool.lu/hexconvert/）
-</span></span><span class="line"><span class="cl">* 利用fofa语法cert：cert=&#34;十进制序列号&#34;搜索证书（https或imaps等）中带有对应证书的资产。
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">*</span> <span class="err">首先查看</span><span class="n">https获得网站证书序列号</span><span class="err">；</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span> <span class="err">将序列号十六进制转换成十进制（</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="k">tool</span><span class="o">.</span><span class="n">lu</span><span class="o">/</span><span class="n">hexconvert</span><span class="o">/</span><span class="err">）</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span> <span class="err">利用</span><span class="n">fofa语法cert</span><span class="err">：</span><span class="n">cert</span><span class="o">=</span><span class="s2">&#34;十进制序列号&#34;</span><span class="err">搜索证书（</span><span class="n">https或imaps等</span><span class="err">）中带有对应证书的资产。</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -320,8 +322,8 @@ nmap -sS -Pn -n --open 122.14.193.200 --min-hostgroup 4 --min-parallelism 1024 -
 </div>
 </article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ev1l0o4g</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.120.3">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ev1l0o4g</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
 
