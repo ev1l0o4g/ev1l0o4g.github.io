@@ -4,7 +4,18 @@
         <link>https://ev1l0o4g.xyz/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/</link>
         <description>信息收集 - 标签 - ev1l0o4g&#39;s blog</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
-            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Tue, 27 Jun 2023 15:16:20 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Sun, 12 Nov 2023 22:03:25 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="self" type="application/rss+xml" /><item>
+    <title>记灯塔ARL的搭建</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E7%81%AF%E5%A1%94arl%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
+    <pubDate>Sun, 12 Nov 2023 22:03:25 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E7%81%AF%E5%A1%94arl%E7%9A%84%E6%90%AD%E5%BB%BA/</guid>
+    <description><![CDATA[灯塔找资产还是挺好用的！
+docker安装ARL 1 2 3 4 5 6 7 8 cd /opt/ mkdir docker_arl wget -O docker_arl/docker.zip https://github.com/TophantTechnology/ARL/releases/download/v2.6/docker.zip cd docker_arl unzip -o docker.zip docker-compose pull docker volume create arl_db docker-compose up -d 如果pull失败，要么用代理，要么换docker镜像源。记得docker启动前修改配置文件，添加fofa/hunter/quake密钥。
+批量导入POC 在docker_arl目录创建poc文件夹，将POC文件放在/docker_arl/poc路径，docker重启ARL即可。
+批量导入指纹 要想批量导入指纹，可以使用使用ARL-Finger-ADD ARL-Finger-ADD批量导入的是Ehole3.0的指纹，嫌指纹少可以用各大佬的魔改版Ehole指纹。]]></description>
+</item>
+<item>
     <title>目标资产收集小结</title>
     <link>https://ev1l0o4g.xyz/%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E6%94%B6%E9%9B%86%E5%B0%8F%E7%BB%93/</link>
     <pubDate>Tue, 27 Jun 2023 15:16:20 &#43;0800</pubDate>

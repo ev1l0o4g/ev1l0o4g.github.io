@@ -1,0 +1,35 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>工具 - 分类 - ev1l0o4g&#39;s blog</title>
+        <link>https://ev1l0o4g.xyz/categories/%E5%B7%A5%E5%85%B7/</link>
+        <description>工具 - 分类 - ev1l0o4g&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Wed, 29 May 2024 08:45:59 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/categories/%E5%B7%A5%E5%85%B7/" rel="self" type="application/rss+xml" /><item>
+    <title>认识Nuclei Yaml模板</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%A4%E8%AF%86nuclei-yaml%E6%A8%A1%E6%9D%BF/</link>
+    <pubDate>Wed, 29 May 2024 08:45:59 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%A4%E8%AF%86nuclei-yaml%E6%A8%A1%E6%9D%BF/</guid>
+    <description><![CDATA[基本语法 大小写敏感：YAML对大小写敏感，这意味着键名的大小写必须精确匹配。 使用缩进表示层级关系：YAML通过缩进来表示数据的层级结构。缩进时不允许使用Tab键，只允许使用空格键。缩进的空格数目不重要，只要相同层级的元素左侧对齐即可。 注释：使用#符号表示注释，从#字符开始到行尾的内容都会被解析器忽略。 数据类型：YAML支持的数据类型包括对象（键值对的集合）、数组（一组按次序排列的值）、纯量（单个的、不可再分的值，如字符串、布尔值、整数、浮点数等）。 变量使用：YAML提供了锚点（&amp;）和引用（*）的语法，用于复用数据，避免重复定义。 复合结构：对象和数组可以结合使用，形成复合结构，如在一个YAML文件中定义多个对象或数组。 模板格式 1 2 3 4 5 6 7 8 9 10 11 12 13 id: info: name: author: severity: description: http: - raw: - | HTTP请求体 筛选与匹配 id：id不能有中文、特殊字符、&ndash;以及空格等内容，id这个参数，您可以理解为是输出的标题，一个简单易懂的ID，可以让您更快的判断出，该漏洞的大致情况：
+info：信息块，名称 、 作者 、 严重性 、 描述 、参考和 标签 ，这些都属于信息块的范围，一般情况下，我们只需要写入名称、作者、严重性、描述、标签这几项即可；
+name：模板名称，这个建议跟id相同即可；
+author：作者名称，标识版权的一种方式，但是加不加也就那样，毕竟下载后随时可以更改，也保护不了啥。
+severity：严重性，这里不可以使用中文，一般用critical、hight、Medium、info来表示威胁等级；
+description：漏洞介绍，这里可以使用中文，也不限制特殊字符，一般是用来做漏洞介绍用的，可以方便使用者了解该漏洞的具体说明；
+tags：标签，是为了给漏洞加一个标签，方便进行统一扫描，例如：tags: seeyon(切记不要用中文哈)
+在语法错误后，nuclei执行时会提示“Could not run nuclei: no templates provided for scan”，当看到该提示时，记得先排查下模板id是否存在特殊字符；
+nuclei模板内置保留字 1 2 3 4 5 6 7 8 9 10 11 12 {{Hostname}}：这是一个常用的保留字，表示主机名。 {{randstr}}：这是一个随机字符串。 {{rand_int(1,9999)}}：这是一个生成 1 到 9999 之间随机整数的保留字。 {{BaseURL}}：表示完整的基本 URL，例如 https://example.]]></description>
+</item>
+<item>
+    <title>记灯塔ARL的搭建</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E7%81%AF%E5%A1%94arl%E7%9A%84%E6%90%AD%E5%BB%BA/</link>
+    <pubDate>Sun, 12 Nov 2023 22:03:25 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E7%81%AF%E5%A1%94arl%E7%9A%84%E6%90%AD%E5%BB%BA/</guid>
+    <description><![CDATA[灯塔找资产还是挺好用的！
+docker安装ARL 1 2 3 4 5 6 7 8 cd /opt/ mkdir docker_arl wget -O docker_arl/docker.zip https://github.com/TophantTechnology/ARL/releases/download/v2.6/docker.zip cd docker_arl unzip -o docker.zip docker-compose pull docker volume create arl_db docker-compose up -d 如果pull失败，要么用代理，要么换docker镜像源。记得docker启动前修改配置文件，添加fofa/hunter/quake密钥。
+批量导入POC 在docker_arl目录创建poc文件夹，将POC文件放在/docker_arl/poc路径，docker重启ARL即可。
+批量导入指纹 要想批量导入指纹，可以使用使用ARL-Finger-ADD ARL-Finger-ADD批量导入的是Ehole3.0的指纹，嫌指纹少可以用各大佬的魔改版Ehole指纹。]]></description>
+</item>
+</channel>
+</rss>

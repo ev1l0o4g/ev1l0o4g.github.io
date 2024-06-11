@@ -1,0 +1,30 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>环境配置 - 标签 - ev1l0o4g&#39;s blog</title>
+        <link>https://ev1l0o4g.xyz/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link>
+        <description>环境配置 - 标签 - ev1l0o4g&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>ev1l0o4g@gmail.com (ev1l0o4g)</managingEditor>
+            <webMaster>ev1l0o4g@gmail.com (ev1l0o4g)</webMaster><lastBuildDate>Sun, 12 Nov 2023 20:21:17 &#43;0800</lastBuildDate><atom:link href="https://ev1l0o4g.xyz/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="self" type="application/rss+xml" /><item>
+    <title>记win11终端ssh配置和Ubuntu设置root登录</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0win11%E7%BB%88%E7%AB%AFssh%E9%85%8D%E7%BD%AE%E5%92%8Cubuntu%E8%AE%BE%E7%BD%AEroot%E7%99%BB%E5%BD%95/</link>
+    <pubDate>Sun, 12 Nov 2023 20:21:17 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0win11%E7%BB%88%E7%AB%AFssh%E9%85%8D%E7%BD%AE%E5%92%8Cubuntu%E8%AE%BE%E7%BD%AEroot%E7%99%BB%E5%BD%95/</guid>
+    <description><![CDATA[win11终端配置 win11自带SSH，如果在把服务器添加到win11终端岂不是方便了许多。 操作很简单，在终端新建配置文件，命令行改为ssh的命令，给配置文件起个名，保存就完事 甚至还能设置自己心爱的logo，缺点就是每次要输密码，不过也可以密钥免密登录 Ubuntu设置root登录 上次出差因为酒店房间线路短路，导致前任电脑出现了硬伤，无奈只好含（喜）泪重（提）金购置小“外星人”。 重装ubuntu虚拟机就很烦，桌面版ubuntu默认禁止root登录，想要以root用户进行登录需要进行一些操作，如下：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 一、 修改文件/usr/share/lightdm/lightdm.conf.d/50-unity-greeter.conf文件，增加两行： greeter-show-manual-login=true all-guest=false 保存 二、 进入/etc/pam.d目录，修改gdm-autologin和gdm-password文件 vi gdm-autologin 注释掉auth required pam_succeed_if.so user != root quiet_success这一行，保存 vi gdm-password 注释掉 auth required pam_succeed_if.so user != root quiet_success这一行，保存 三、 修改/root/.profile文件 vi /root/.profile 将文件末尾的mesg n || true这一行修改成tty -s&amp;&amp;mesg n || true， 保存 四、 重启系统，输入root用户名和密码，登录系统。 五、 vim /etc/gdm3/custom.]]></description>
+</item>
+<item>
+    <title>记一些环境错误的修复</title>
+    <link>https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/</link>
+    <pubDate>Wed, 06 Sep 2023 16:29:08 &#43;0800</pubDate>
+    <author>ev1l0o4g</author>
+    <guid>https://ev1l0o4g.xyz/%E8%AE%B0%E4%B8%80%E4%BA%9B%E7%8E%AF%E5%A2%83%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%AE%E5%A4%8D/</guid>
+    <description><![CDATA[kali添加环境变量 golang安装工具后无法执行，需添加环境变量
+1 2 3 4 vim /etc/profile export PATH=/root/go/bin:$PATH source /etc/profile 但重启终端后依然无效，还需在/root/.zshrc添加
+1 2 3 4 vim /root/.zshrc export PATH=/root/go/bin:$PATH source /root/.zshrc ubuntu解决libc.so.6报错 ubuntu经常遇到libc.so.6报错： /XXXXX: /lib/x86_64-linux-gnu/libc.so.6: version 'GLIBC_2.32' not found (required by./XXXXX)
+试了众多方法，终于找到一个有效的：
+1 2 3 4 5 6 7 8 9 编辑更新源： vim /etc/apt/sources.list 添加 deb [http://th.archive.ubuntu.com/ubuntu](http://th.archive.ubuntu.com/ubuntu) jammy main 执行 apt-get update apt-get install libc6 ubuntu系统上systemd-resolved不使用127.0.0.53的方法 自建DNSlog总遇到53端口被占用，试了百度的几个方法也是治标不治本，甚至会影响服务器更新，试了下面的方法比较有效，也不影响服务器更新。 方法源于：https://dyrnq.com/ubuntu-update-etc-resolve-conf/
+有些文章说用关闭（删除）systemd-resolved ，而使用 resolvconf 、openresolv、Unbound 替换，测试发现在ubuntu 20.04.2 LTS NetworkManager已经被 systemd-networkd 取代，复杂度（依赖关系）较高。所以研究依然保持使用systemd-resolved而不使用127.0.0.53的配置思路。]]></description>
+</item>
+</channel>
+</rss>
