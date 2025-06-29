@@ -4,7 +4,7 @@
 # -------------------------------------------------------------------------------------
 
 title = "ev1l0o4g's blog"
-baseURL = "https://ev1l0o4g.github.io"
+baseURL = "https://www.ev1l0o4g.xyz"
 theme = [
   "FixIt",
   "shortcode-docs-bookmark"
