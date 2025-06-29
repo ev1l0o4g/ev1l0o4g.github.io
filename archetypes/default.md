@@ -4,5 +4,10 @@ subtitle: ""
 date: {{ .Date }}
 description: ""
 keywords: ""
+tags: 
+- 
+categories: 
+- 
 comment: false
+password: ""
 ---

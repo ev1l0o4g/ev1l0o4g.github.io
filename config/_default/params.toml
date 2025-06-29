@@ -40,10 +40,10 @@ disableThemeInject = false
 
 # Author Configuration
 [author]
-  name = "Lruihao"
-  email = "1024@lruihao.cn"
-  link = "https://github.com/Lruihao"
-  avatar = ""
+  name = "ev1l0o4g"
+  email = "ev1l0o4h@gmail.com"
+  link = "https://github.com/LOONG001"
+  avatar = "/img/logo.png"
 
 # FixIt 0.3.0 | NEW public Git repository information only then enableGitInfo is true
 [gitInfo]
@@ -59,7 +59,7 @@ disableThemeInject = false
 # App icon config
 [app]
   # optional site title override for the app when added to an iOS home screen or Android launcher
-  title = "Hugo FixIt Blog"
+  title = "ev1l0o4g's blog"
   # whether to omit favicon resource links
   noFavicon = false
   # modern SVG favicon to use in place of older style .png and .ico files
@@ -115,15 +115,15 @@ disableThemeInject = false
   # Header title config
   [header.title]
     # URL of the LOGO
-    logo = "/hugo-fixit-starter1/images/fixit.min.svg"
+    logo = ""
     # title name
-    name = ""
+    name = "ev1l0o4g's blog"
     # you can add extra information before the name (HTML format is supported), such as icons
-    pre = ""
+    pre = "<i class=\"fa fa-code\">&nbsp</i>"
     # you can add extra information after the name (HTML format is supported), such as icons
     post = ""
     # whether to use typeit animation for title name
-    typeit = false
+    typeit = true
   # FixIt 0.2.12 | NEW Header subtitle config
   [header.subtitle]
     # subtitle name
@@ -155,7 +155,7 @@ disableThemeInject = false
   # whether to show the author
   author = true
   # Site creation year
-  since = 2021
+  since = 2022
   # FixIt 0.2.12 | NEW Public network security only in China (HTML format is supported)
   gov = ""
   # ICP info only in China (HTML format is supported)
@@ -169,14 +169,14 @@ disableThemeInject = false
     themeLogo = true
   # FixIt 0.2.17 | CHANGED Site creation time
   [footer.siteTime]
-    enable = false
+    enable = true
     animate = true
     icon = "fa-solid fa-heartbeat"
     pre = ""
-    value = "" # e.g. "2021-12-18T16:15:22+08:00"
+    value = "2025-06-29T16:15:22+08:00" # e.g. "2021-12-18T16:15:22+08:00"
   # FixIt 0.2.17 | NEW footer lines order, optional values: ["first", 0, 1, 2, 3, 4, 5, "last"]
   [footer.order]
-    powered = 0
+    powered = 1
     copyright = 0
     statistics = 0
     visitor = 0
@@ -205,7 +205,7 @@ disableThemeInject = false
 # Term list (category or tag) page config
 [list]
   # special amount of posts in each list page
-  paginate = 20
+  paginate = 6
   # date format (month and day)
   dateFormat = "01-02"
   # FixIt 0.3.10 | NEW Term list feed config for RSS, Atom and JSON feed.
@@ -239,13 +239,13 @@ disableThemeInject = false
     # Gravatar Email for preferred avatar in home page
     gravatarEmail = "xx@xx.com"
     # URL of avatar shown in home page
-    avatarURL = ""
+    avatarURL = "/img/logo.png"
     # FixIt 0.2.17 | NEW identifier of avatar menu link
-    avatarMenu = ""
+    avatarMenu = "github"
     # title shown in home page (HTML format is supported)
     title = ""
     # subtitle shown in home page (HTML format is supported)
-    subtitle = "This is my new Hugo FixIt site"
+    subtitle = ""
     # whether to use typeit animation for subtitle
     typeit = true
     # whether to show social links
@@ -260,9 +260,9 @@ disableThemeInject = false
 
 # FixIt 0.2.16 | CHANGED Social config about the author
 [social]
-  GitHub = ""
+  GitHub = "LOONG001"
   Linkedin = ""
-  Twitter = ""
+  Twitter = "ducoduko"
   Instagram = ""
   Facebook = ""
   Telegram = ""
@@ -479,7 +479,7 @@ disableThemeInject = false
   # CDN data file name, disabled by default ["jsdelivr.yml", "unpkg.yml", ...]
   # located in "themes/FixIt/assets/data/cdn/" directory
   # you can store your own data files in the same path under your project: "assets/data/cdn/"
-  data = ""
+  data = "jsdelivr.yml"
 
 # Compatibility config
 [compatibility]

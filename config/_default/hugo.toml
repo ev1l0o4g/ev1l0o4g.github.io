@@ -3,13 +3,13 @@
 # See: https://gohugo.io/getting-started/configuration/
 # -------------------------------------------------------------------------------------
 
-title = "Hugo FixIt Blog"
-baseURL = "https://hugo-fixit.github.io/hugo-fixit-starter1/"
+title = "ev1l0o4g's blog"
+baseURL = "https://ev1l0o4g.github.io"
 theme = [
   "FixIt",
   "shortcode-docs-bookmark"
 ]
-defaultContentLanguage = "en"
+defaultContentLanguage = "zh-cn"
 languageCode = "en"
 hasCJKLanguage = true
 enableRobotsTXT = true

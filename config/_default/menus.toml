@@ -4,14 +4,14 @@
 # -------------------------------------------------------------------------------------
 
 [[main]]
-  identifier = "archives"
+  identifier = "home"
   parent = ""
   # you can add extra information before the name (HTML format is supported), such as icons
   pre = ""
   # you can add extra information after the name (HTML format is supported), such as icons
   post = ""
-  name = "Archives"
-  url = "/archives/"
+  name = "首页"
+  url = "/"
   # title will be shown when you hover on this menu link
   title = ""
   weight = 1
@@ -22,28 +22,50 @@
     # whether set as a draft menu item whose function is similar to a draft post/page
     draft = false
     # FixIt 0.2.16 | NEW add fontawesome icon to a specific menu item
-    icon = "fa-solid fa-archive"
+    icon = "fa-solid fa-home"
     # FixIt 0.2.16 | NEW set menu item type, optional values: ["mobile", "desktop"]
     type = ""
+[[main]]
+  identifier = "posts"
+  parent = ""
+  pre = ""
+  post = ""
+  name = "文章"
+  url = "/posts/"
+  title = ""
+  weight = 2
+  [main.params]
+    icon = "fa-solid fa-archive"
 [[main]]
   identifier = "categories"
   parent = ""
   pre = ""
   post = ""
-  name = "Categories"
+  name = "分类"
   url = "/categories/"
   title = ""
-  weight = 2
+  weight = 3
   [main.params]
-    icon = "fa-solid fa-folder-tree"
+    icon = "fa-solid fa-th-list"
 [[main]]
   identifier = "tags"
   parent = ""
   pre = ""
   post = ""
-  name = "Tags"
+  name = "标签"
   url = "/tags/"
   title = ""
-  weight = 3
+  weight = 4
+  [main.params]
+    icon = "fa-solid fa-tags"
+[[main]]
+  identifier = "nav"
+  parent = ""
+  pre = ""
+  post = ""
+  name = "导航页"
+  url = "https://nav.ev1l0o4g.xyz"
+  title = ""
+  weight = 5
   [main.params]
     icon = "fa-solid fa-tags"
