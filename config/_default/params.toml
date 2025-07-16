@@ -33,10 +33,10 @@ titleDelimiter = "-"
 # remember to set up your site subtitle by `params.header.subtitle.name`
 indexWithSubtitle = false
 # FixIt 0.3.13 | NEW whether to show summary in plain text
-summaryPlainify = false
+summaryPlainify = true
 # FixIt 0.2.14 | NEW FixIt will, by default, inject a theme meta tag in the HTML head on the home page only.
 # You can turn it off, but we would really appreciate if you don’t, as this is a good way to watch FixIt's popularity on the rise.
-disableThemeInject = false
+disableThemeInject = true
 
 # Author Configuration
 [author]
@@ -61,9 +61,9 @@ disableThemeInject = false
   # optional site title override for the app when added to an iOS home screen or Android launcher
   title = "ev1l0o4g's blog"
   # whether to omit favicon resource links
-  noFavicon = false
+  noFavicon = true
   # modern SVG favicon to use in place of older style .png and .ico files
-  svgFavicon = ""
+  svgFavicon = "/img/logo.png"
   # Safari mask icon color
   iconColor = "#5bbad5"
   # Windows v8-10 tile color
@@ -164,7 +164,7 @@ disableThemeInject = false
   license = '<a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>'
   # FixIt 0.3.0 | NEW whether to show Hugo and theme info
   [footer.powered]
-    enable = true
+    enable = false
     hugoLogo = true
     themeLogo = true
   # FixIt 0.2.17 | CHANGED Site creation time
@@ -217,9 +217,9 @@ disableThemeInject = false
 
 # FixIt 0.3.13 | NEW recently updated pages config for archives, section and term list
 [recentlyUpdated]
-  archives = true
-  section = true
-  list = true
+  archives = false
+  section = false
+  list = false
   days = 30
   maxCount = 10
 
@@ -467,7 +467,7 @@ disableThemeInject = false
 
 # Cookie consent config
 [cookieconsent]
-  enable = true
+  enable = false
   # text strings used for Cookie consent banner
   [cookieconsent.content]
     message = ""
@@ -498,7 +498,7 @@ disableThemeInject = false
 # FixIt 0.2.14 | NEW Gravatar config
 [gravatar]
   # FixIt 0.2.18 | NEW Depends on the author's email, if the author's email is not set, the local avatar will be used
-  enable = true
+  enable = false
   # Gravatar host, default: "www.gravatar.com"
   host = "www.gravatar.com" # ["cravatar.cn", "gravatar.loli.net", ...]
   style = "" # ["", "mp", "identicon", "monsterid", "wavatar", "retro", "blank", "robohash"]
@@ -507,11 +507,11 @@ disableThemeInject = false
 [backToTop]
   enable = true
   # Scroll percent label in b2t button
-  scrollpercent = false
+  scrollpercent = true
 
 # FixIt 0.2.16 | NEW Reading progress bar
 [readingProgress]
-  enable = false
+  enable = true
   # Available values: ["left", "right"]
   start = "left"
   # Available values: ["top", "bottom"]
@@ -538,7 +538,7 @@ disableThemeInject = false
   # The number of posts to include in the feed. If set to -1, all posts.
   limit = 10
   # whether to show the full text content in feed.
-  fullText = true
+  fullText = false
   # Site Challenge for Follow: https://follow.is/
   [feed.follow]
     feedId = ""
@@ -595,15 +595,15 @@ disableThemeInject = false
   # license info (HTML format is supported)
   license = '<a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>'
   # whether to show link to Raw Markdown content of the post
-  linkToMarkdown = true
+  linkToMarkdown = false
   # FixIt 0.3.0 | NEW whether to show link to view source code of the post
-  linkToSource = true
+  linkToSource = false
   # FixIt 0.3.0 | NEW whether to show link to edit the post
-  linkToEdit = true
+  linkToEdit = false
   # FixIt 0.3.0 | NEW whether to show link to report issue for the post
-  linkToReport = true
+  linkToReport = false
   # FixIt 0.3.10 | CHANGED Page style ["narrow", "normal", "wide", ...]
-  pageStyle = "normal"
+  pageStyle = "wide"
   # FixIt 0.2.17 | CHANGED Auto Bookmark Support
   # If true, save the reading progress when closing the page.
   autoBookmark = false
@@ -640,7 +640,7 @@ disableThemeInject = false
     endLevel = 6
   # FixIt 0.2.13 | NEW Display a message at the beginning of an article to warn the reader that its content might be expired
   [page.expirationReminder]
-    enable = false
+    enable = true
     # Display the reminder if the last modified time is more than 90 days ago
     reminder = 90
     # Display warning if the last modified time is more than 180 days ago
@@ -686,7 +686,7 @@ disableThemeInject = false
     # FixIt 0.2.13 | NEW whether to show the edit button of the code wrapper
     edit = true
     # the maximum number of lines of displayed code by default
-    maxShownLines = 10
+    maxShownLines = 100
   # Mapbox GL JS config (https://docs.mapbox.com/mapbox-gl-js)
   [page.mapbox]
     # access token of Mapbox GL JS
@@ -728,7 +728,7 @@ disableThemeInject = false
       # bitcoin = "/images/bitcoin.png"
   # social share links in post page
   [page.share]
-    enable = true
+    enable = false
     Twitter = true
     Facebook = true
     Linkedin = false
