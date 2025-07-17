@@ -6,7 +6,7 @@
 # FixIt 0.2.15 | CHANGED FixIt theme version
 version = "0.3.X" # e.g. "0.2.X", "0.2.15", "v0.2.15" etc.
 # site description
-description = "This is my new Hugo FixIt site"
+description = ""
 # site keywords
 keywords = ["Hugo", "FixIt"]
 # site default theme ["light", "dark", "auto"]
@@ -42,7 +42,7 @@ disableThemeInject = true
 [author]
   name = "ev1l0o4g"
   email = "ev1l0o4h@gmail.com"
-  link = "https://github.com/LOONG001"
+  link = "https://github.com/ev1l0o4g"
   avatar = "/img/logo.png"
 
 # FixIt 0.3.0 | NEW public Git repository information only then enableGitInfo is true
@@ -61,7 +61,7 @@ disableThemeInject = true
   # optional site title override for the app when added to an iOS home screen or Android launcher
   title = "ev1l0o4g's blog"
   # whether to omit favicon resource links
-  noFavicon = true
+  noFavicon = false
   # modern SVG favicon to use in place of older style .png and .ico files
   svgFavicon = "/img/logo.png"
   # Safari mask icon color
@@ -153,7 +153,7 @@ disableThemeInject = true
   # whether to show copyright info
   copyright = true
   # whether to show the author
-  author = true
+  author = false
   # Site creation year
   since = 2022
   # FixIt 0.2.12 | NEW Public network security only in China (HTML format is supported)
@@ -260,7 +260,7 @@ disableThemeInject = true
 
 # FixIt 0.2.16 | CHANGED Social config about the author
 [social]
-  GitHub = "LOONG001"
+  GitHub = "ev1l0o4g"
   Linkedin = ""
   Twitter = "ducoduko"
   Instagram = ""

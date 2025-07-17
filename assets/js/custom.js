@@ -9,7 +9,7 @@ class FixItBlog {
    * @returns {FixItBlog}
    */
   hello() {
-    console.log('custom.js: Hello FixIt!');
+    console.log('custom.js: Hello!');
     return this;
   }
 
